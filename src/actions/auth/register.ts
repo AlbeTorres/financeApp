@@ -1,15 +1,17 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { generateVerificationToken } from '@/lib/tokens'
 import { RegisterSchema } from '@/schema'
 import bcryptjs from 'bcryptjs'
 import * as z from 'zod'
+import { parseResponse } from '../lib/parseResponse'
 
 export const regsiterUser = async ({ name, email, password }: z.infer<typeof RegisterSchema>) => {
-  const validatedFields = RegisterSchema.safeParse({ email, password })
+  const validatedFields = RegisterSchema.safeParse({ email, password, name })
 
   if (!validatedFields.success) {
-    return { ok: false, error: 'Invalid fields!' }
+    return parseResponse(false, 401, 'invalid_fields', 'Invalid fields!')
   }
 
   try {
@@ -26,14 +28,11 @@ export const regsiterUser = async ({ name, email, password }: z.infer<typeof Reg
       },
     })
 
-    return {
-      ok: true,
-      user: user,
-    }
+    const verificationToken = await generateVerificationToken(email)
+
+    return parseResponse(true, 200, null, 'Confirmation email sent!', user)
   } catch (error) {
     console.log(error)
-    return {
-      ok: false,
-    }
+    return parseResponse(false, 200, error, 'Something went wrong')
   }
 }

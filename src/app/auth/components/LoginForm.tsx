@@ -40,13 +40,13 @@ export const LoginForm = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
 
-  console.log(callbackUrl)
   const handleSubmit = async (values: z.infer<typeof LoginSchema>) =>
     startTransition(async () => {
       const result = await login(values)
 
-      if (!result.ok) {
+      if (!result.state) {
         // Manejar error
+        console.log(result.message)
         setMessage({
           message: 'Something went wrong!',
           type: 'error',

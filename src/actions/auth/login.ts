@@ -1,35 +1,36 @@
 'use server'
 
 import { signIn } from '@/auth'
+import prisma from '@/lib/prisma'
+import { generateVerificationToken } from '@/lib/tokens'
 import { LoginSchema } from '@/schema'
 import * as z from 'zod'
-
-// export async function authenticate(prevState: string | undefined, formData: FormData) {
-//   try {
-//     await signIn('credentials', {
-//       ...Object.fromEntries(formData),
-//       redirect: false,
-//     })
-
-//     return 'Success'
-//   } catch (error) {
-//     console.log(error)
-//     return 'CredentialsSignin'
-//   }
-// }
+import { parseResponse } from '../lib/parseResponse'
 
 export const login = async ({ email, password }: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse({ email, password })
 
   if (!validatedFields.success) {
-    return { ok: false, error: 'Invalid fields!' }
+    return parseResponse(false, 401, 'invalid_fields', 'Invalid fields!')
+  }
+
+  const user = await prisma.user.findUnique({ where: { email } })
+
+  if (!user || !user.email || !user.password) {
+    return parseResponse(false, 404, 'invalid_credentials', 'Invalid credentials!')
+  }
+
+  if (!user.emailVerified) {
+    const verificationToken = await generateVerificationToken(user.email)
+
+    return parseResponse(false, 200, 'unverificated_email', 'Confirmation email sent!')
   }
 
   try {
     await signIn('credentials', { email, password, redirect: false })
-    return { ok: true }
+    return parseResponse(true, 200, null, 'User autenticated')
   } catch (error) {
     console.log(error)
-    return { ok: false }
+    return parseResponse(false, 200, error, 'Something went wrong')
   }
 }

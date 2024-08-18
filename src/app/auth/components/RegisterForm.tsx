@@ -21,13 +21,6 @@ import * as z from 'zod'
 import { AuthMessage } from './AuthMessage'
 import { CardWrapper } from './CardWrapper'
 
-interface SingupFrom {
-  name: string
-  email: string
-  password: string
-  passwordConfirmation: string
-}
-
 export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<{ message: string; type: 'error' | 'success' | null }>({
@@ -49,7 +42,7 @@ export const RegisterForm = () => {
       const { setValue } = form
       const { name, email, password } = data
       const rest = await regsiterUser({ name, email, password })
-      if (!rest.ok) {
+      if (!rest.state) {
         setMessage({
           message: 'Something went wrong!',
           type: 'error',
