@@ -46,16 +46,19 @@ export const LoginForm = () => {
 
       if (!result.state) {
         // Manejar error
-        console.log(result.message)
         setMessage({
           message: 'Something went wrong!',
           type: 'error',
         })
       } else {
-        setMessage({
-          message: 'Email sended',
-          type: 'success',
-        })
+        if (result.error === 'unverificated_email') {
+          setMessage({
+            message: 'Email sent',
+            type: 'success',
+          })
+          return
+        }
+
         // Redirigir al usuario
         router.push(callbackUrl)
       }

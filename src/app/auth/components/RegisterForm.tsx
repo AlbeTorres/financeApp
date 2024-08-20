@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form'
 
 import { login } from '@/actions/auth/login'
-import { regsiterUser } from '@/actions/auth/register'
+import { registerUser } from '@/actions/auth/register'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -41,7 +41,7 @@ export const RegisterForm = () => {
     startTransition(async () => {
       const { setValue } = form
       const { name, email, password } = data
-      const rest = await regsiterUser({ name, email, password })
+      const rest = await registerUser({ name, email, password })
       if (!rest.state) {
         setMessage({
           message: 'Something went wrong!',
@@ -50,7 +50,15 @@ export const RegisterForm = () => {
         setValue('email', '')
         setValue('password', '')
       } else {
-        await login({ email: email.toLocaleLowerCase(), password })
+        const result = await login({ email: email.toLocaleLowerCase(), password })
+
+        if (result.error === 'unverificated_email') {
+          setMessage({
+            message: 'Email sent',
+            type: 'success',
+          })
+          return
+        }
         router.replace('/')
       }
     })

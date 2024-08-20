@@ -24,6 +24,16 @@ export default {
     newUser: '/auth/new-account',
   },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== 'credentials') return true
+
+      const existingUser = await prisma.user.findUnique({ where: { id: user.id } })
+
+      if (!existingUser?.emailVerified) return false
+
+      return true
+    },
+
     authorized({ request: { nextUrl }, auth }) {
       const isLoggedIn = auth?.user
       const isAdmin = auth?.user.role === 'admin'

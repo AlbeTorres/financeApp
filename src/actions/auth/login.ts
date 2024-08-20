@@ -4,7 +4,6 @@ import { signIn } from '@/auth'
 import { sendVerificationMail } from '@/email/sendVerificationMail'
 import prisma from '@/lib/prisma'
 import { generateVerificationToken } from '@/lib/tokens'
-import { getVerificationTokenByEmail } from '@/lib/verification-token'
 import { LoginSchema } from '@/schema'
 import * as z from 'zod'
 import { parseResponse } from '../lib/parseResponse'
@@ -24,9 +23,8 @@ export const login = async ({ email, password }: z.infer<typeof LoginSchema>) =>
 
   if (!user.emailVerified) {
     const verificationToken = await generateVerificationToken(user.email)
-    const token = await getVerificationTokenByEmail(user.email)
-    sendVerificationMail(user.email, token!.token, user!.name || '')
-    return parseResponse(false, 200, 'unverificated_email', 'Confirmation email sent!')
+    sendVerificationMail(user.email, verificationToken!.token, user!.name || '')
+    return parseResponse(true, 200, 'unverificated_email', 'Confirmation email sent!')
   }
 
   try {
