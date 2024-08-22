@@ -14,20 +14,19 @@ export const login = async ({ email, password }: z.infer<typeof LoginSchema>) =>
   if (!validatedFields.success) {
     return parseResponse(false, 401, 'invalid_fields', 'Invalid fields!')
   }
-
-  const user = await prisma.user.findUnique({ where: { email } })
-
-  if (!user || !user.email || !user.password) {
-    return parseResponse(false, 404, 'invalid_credentials', 'Invalid credentials!')
-  }
-
-  if (!user.emailVerified) {
-    const verificationToken = await generateVerificationToken(user.email)
-    sendVerificationMail(user.email, verificationToken!.token, user!.name || '')
-    return parseResponse(true, 200, 'unverificated_email', 'Confirmation email sent!')
-  }
-
   try {
+    const user = await prisma.user.findUnique({ where: { email } })
+
+    if (!user || !user.email || !user.password) {
+      return parseResponse(false, 404, 'invalid_credentials', 'Invalid credentials!')
+    }
+
+    if (!user.emailVerified) {
+      const verificationToken = await generateVerificationToken(user.email)
+      sendVerificationMail(user.email, verificationToken!.token, user!.name || '')
+      return parseResponse(true, 200, 'unverificated_email', 'Confirmation email sent!')
+    }
+
     await signIn('credentials', { email, password, redirect: false })
     return parseResponse(true, 200, null, 'User autenticated')
   } catch (error) {

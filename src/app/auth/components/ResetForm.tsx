@@ -1,10 +1,10 @@
 'use client'
 
-import { login } from '@/actions/auth/login'
 import { Button } from '@/components/ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CardWrapper } from './CardWrapper'
 
+import { reset } from '@/actions/auth/reset'
 import {
   Form,
   FormControl,
@@ -14,25 +14,24 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoginSchema } from '@/schema'
+import { ResetSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { AuthMessage } from './AuthMessage'
 
-export const LoginForm = () => {
+export const ResetForm = () => {
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<{ message: string; type: 'error' | 'success' | null }>({
     message: '',
     type: null,
   })
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
     defaultValues: {
       email: '',
-      password: '',
     },
   })
 
@@ -40,25 +39,26 @@ export const LoginForm = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
 
-  const handleSubmit = async (values: z.infer<typeof LoginSchema>) =>
+  const handleSubmit = async (values: z.infer<typeof ResetSchema>) =>
     startTransition(async () => {
-      const result = await login(values)
+      const result = await reset(values)
 
       if (!result.state) {
         // Manejar error
+
+        if (result.error === 'invalid_credentials') {
+          setMessage({
+            message: "we couldn't found a registered user with that email",
+            type: 'error',
+          })
+          return
+        }
+
         setMessage({
           message: 'Something went wrong!',
           type: 'error',
         })
       } else {
-        if (result.error === 'unverificated_email') {
-          setMessage({
-            message: 'Email sent',
-            type: 'success',
-          })
-          return
-        }
-
         // Redirigir al usuario
         router.push(callbackUrl)
       }
@@ -66,13 +66,10 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel='Login to your account'
-      backButtonHref='/auth/new-account'
-      backButtonLabel="Don't have an account?"
-      recoverButtonHref='/auth/reset'
-      recoverButtonLabel='I forgot my password'
+      headerLabel='Forgot your password'
+      backButtonHref='/auth/login'
+      backButtonLabel='Back to login'
       callbackUrl={callbackUrl}
-      showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -96,25 +93,6 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
-                      {...field}
-                      placeholder='password'
-                      type='password'
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
           <AuthMessage className='my-4' type={message.type} message={message.message} />
           <Button
@@ -122,7 +100,7 @@ export const LoginForm = () => {
             type='submit'
             className='!block px-6 py-2 mt-8 w-full text-white bg-blue-600 rounded-lg hover:bg-blue-900 transition-all duration-300'
           >
-            Login
+            Send reset email
           </Button>
         </form>
       </Form>
