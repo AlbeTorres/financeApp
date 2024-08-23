@@ -1,10 +1,10 @@
 'use client'
 
-import { login } from '@/actions/auth/login'
 import { Button } from '@/components/ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CardWrapper } from './CardWrapper'
 
+import { changePassword } from '@/actions/auth/change-password'
 import {
   Form,
   FormControl,
@@ -14,96 +14,80 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoginSchema } from '@/schema'
+import { ChangePasswordSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import * as z from 'zod'
 import { AuthMessage } from './AuthMessage'
 
-export const LoginForm = () => {
+export const ChangePassword = () => {
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<{ message: string; type: 'error' | 'success' | null }>({
     message: '',
     type: null,
   })
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof ChangePasswordSchema>>({
+    resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      email: '',
       password: '',
     },
   })
 
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const token = useSearchParams().get('token')
 
-  const handleSubmit = async (values: z.infer<typeof LoginSchema>) =>
+  const handleSubmit = async (values: z.infer<typeof ChangePasswordSchema>) =>
     startTransition(async () => {
-      const result = await login(values)
+      if (token !== null) {
+        const result = await changePassword(values, token)
 
-      if (!result.state) {
-        // Manejar error
+        if (!result.state) {
+          // Manejar error
 
-        if (result.error === 'invalid_credentials' || 'credential_signin') {
+          if (result.error === 'invalid_credentials') {
+            setMessage({
+              message: "we couldn't found a registered user with that email",
+              type: 'error',
+            })
+            return
+          }
+          if (result.error === 'expired_token') {
+            setMessage({
+              message: 'Expired token!',
+              type: 'error',
+            })
+            return
+          }
+
           setMessage({
-            message: 'Invalid credentials!',
+            message: 'Something went wrong!',
             type: 'error',
           })
-          return
+        } else {
+          // Redirigir al usuario
+          router.push('/')
+          toast.success('Password succefully reseted')
         }
+      } else {
         setMessage({
-          message: 'Something went wrong!',
+          message: 'Missing token!',
           type: 'error',
         })
-      } else {
-        if (result.error === 'unverificated_email') {
-          setMessage({
-            message: 'Email sent',
-            type: 'success',
-          })
-          return
-        }
-
-        // Redirigir al usuario
-        router.push(callbackUrl)
       }
     })
 
   return (
     <CardWrapper
-      headerLabel='Login to your account'
-      backButtonHref='/auth/new-account'
-      backButtonLabel="Don't have an account?"
-      recoverButtonHref='/auth/reset'
-      recoverButtonLabel='I forgot my password'
-      callbackUrl={callbackUrl}
-      showSocial
+      headerLabel='Forgot your password'
+      backButtonHref='/auth/login'
+      backButtonLabel='Back to login'
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className='mt-4 space-y-4'>
-            <FormField
-              control={form.control}
-              name='email'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
-                      {...field}
-                      placeholder='jhon.doe@example.com'
-                      type='email'
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name='password'
@@ -130,7 +114,7 @@ export const LoginForm = () => {
             type='submit'
             className='!block px-6 py-2 mt-8 w-full text-white bg-blue-600 rounded-lg hover:bg-blue-900 transition-all duration-300'
           >
-            Login
+            Reset password
           </Button>
         </form>
       </Form>

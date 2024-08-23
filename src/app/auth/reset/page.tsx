@@ -1,5 +1,5 @@
 import { ResetForm } from '../components/ResetForm'
 
-export default function NewVerification() {
+export default function ResetPasswordEmail() {
   return <ResetForm />
 }
