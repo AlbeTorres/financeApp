@@ -5,6 +5,7 @@ import Credentials from 'next-auth/providers/credentials'
 import GitHub from 'next-auth/providers/github'
 import Google from 'next-auth/providers/google'
 import prisma from './lib/prisma'
+import { getTwofactorConfirmationByUserId } from './lib/two-factor-confirmation'
 import { signInSchema } from './lib/zod'
 
 const protectedRoutes = ['/testProtected']
@@ -29,7 +30,21 @@ export default {
 
       const existingUser = await prisma.user.findUnique({ where: { id: user.id } })
 
+      //Prevent sign in without email verification
       if (!existingUser?.emailVerified) return false
+
+      if (existingUser.isTwofactorEnabled) {
+        const twoFactorConfirmation = await getTwofactorConfirmationByUserId(existingUser.id)
+
+        if (!twoFactorConfirmation) return false
+
+        //Delete two factor confirmation for next sign in
+        await prisma.twoFactorConfirmation.delete({
+          where: {
+            id: twoFactorConfirmation.id,
+          },
+        })
+      }
 
       return true
     },

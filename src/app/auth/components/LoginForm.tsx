@@ -27,6 +27,7 @@ export const LoginForm = () => {
     message: '',
     type: null,
   })
+  const [showTwoFactor, setShowTwoFactor] = useState(false)
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -54,6 +55,7 @@ export const LoginForm = () => {
           })
           return
         }
+
         setMessage({
           message: 'Something went wrong!',
           type: 'error',
@@ -64,6 +66,10 @@ export const LoginForm = () => {
             message: 'Email sent',
             type: 'success',
           })
+          return
+        }
+        if (result.error === 'two_factor_token_send') {
+          setShowTwoFactor(true)
           return
         }
 
@@ -84,19 +90,19 @@ export const LoginForm = () => {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className='mt-4 space-y-4'>
+          {showTwoFactor ? (
             <FormField
               control={form.control}
-              name='email'
+              name='code'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Two factor code</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
                       {...field}
-                      placeholder='jhon.doe@example.com'
-                      type='email'
+                      placeholder='123456'
+                      type='code'
                       disabled={isPending}
                     />
                   </FormControl>
@@ -104,33 +110,55 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
-                      {...field}
-                      placeholder='password'
-                      type='password'
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          ) : (
+            <div className='mt-4 space-y-4'>
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
+                        {...field}
+                        placeholder='jhon.doe@example.com'
+                        type='email'
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
+                        {...field}
+                        placeholder='password'
+                        type='password'
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
           <AuthMessage className='my-4' type={message.type} message={message.message} />
           <Button
             disabled={isPending}
             type='submit'
             className='!block px-6 py-2 mt-8 w-full text-white bg-blue-600 rounded-lg hover:bg-blue-900 transition-all duration-300'
           >
-            Login
+            {showTwoFactor ? 'Confirm' : 'Login'}
           </Button>
         </form>
       </Form>
