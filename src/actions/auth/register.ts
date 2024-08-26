@@ -27,9 +27,16 @@ export const registerUser = async ({ name, email, password }: z.infer<typeof Reg
       },
     })
 
+    //crear configuracion con lenguaje en cuanto se crea un usuario
+    await prisma.settings.create({
+      data: {
+        userId: user.id,
+      },
+    })
+
     return parseResponse(true, 200, null, 'Confirmation email sent!', user)
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 200, error, 'Something went wrong')
+    return parseResponse(false, 500, '', 'Something went wrong')
   }
 }

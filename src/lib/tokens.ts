@@ -49,7 +49,7 @@ export const generateResetToken = async (email: string) => {
 
 export const generateTwoFactorToken = async (email: string) => {
   const token = cryto.randomInt(100_000, 1_000_000).toString()
-  const expires = new Date(new Date().getTime() + 3600 * 1000) // one hour from now
+  const expires = new Date(new Date().getTime() + 5 * 60 * 1000) // five minutes from now
 
   const existingToken = await getTwoFactorTokenByEmail(email)
 

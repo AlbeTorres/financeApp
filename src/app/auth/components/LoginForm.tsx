@@ -16,12 +16,14 @@ import {
 import { Input } from '@/components/ui/input'
 import { LoginSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { AuthMessage } from './AuthMessage'
 
 export const LoginForm = () => {
+  const t = useTranslations('FinanceApp')
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<{ message: string; type: 'error' | 'success' | null }>({
     message: '',
@@ -80,11 +82,11 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel='Login to your account'
+      headerLabel={t('login_title')}
       backButtonHref='/auth/new-account'
-      backButtonLabel="Don't have an account?"
+      backButtonLabel={t('register_link')}
       recoverButtonHref='/auth/reset'
-      recoverButtonLabel='I forgot my password'
+      recoverButtonLabel={t('password_recover')}
       callbackUrl={callbackUrl}
       showSocial
     >
@@ -96,7 +98,7 @@ export const LoginForm = () => {
               name='code'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Two factor code</FormLabel>
+                  <FormLabel>{t('two_factor_title')}</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
@@ -117,7 +119,7 @@ export const LoginForm = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t('email')}</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
@@ -136,7 +138,7 @@ export const LoginForm = () => {
                 name='password'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t('password')}</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
@@ -158,7 +160,7 @@ export const LoginForm = () => {
             type='submit'
             className='!block px-6 py-2 mt-8 w-full text-white bg-blue-600 rounded-lg hover:bg-blue-900 transition-all duration-300'
           >
-            {showTwoFactor ? 'Confirm' : 'Login'}
+            {showTwoFactor ? t('confirm') : t('login')}
           </Button>
         </form>
       </Form>

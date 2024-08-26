@@ -18,6 +18,11 @@ enum Role {
   user
 }
 
+enum Languaje {
+  en
+  es
+}
+
 model User {
   id                    String                 @id @default(uuid())
   name                  String?
@@ -29,6 +34,7 @@ model User {
   account               Account[]
   isTwofactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  Settings              Settings?
 }
 
 model Account {
@@ -85,4 +91,11 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model Settings {
+  id       String   @id @default(uuid())
+  language Languaje @default(en)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String   @unique
 }
