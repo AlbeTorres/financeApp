@@ -17,6 +17,9 @@ export default function Home() {
         <Button>
           <Link href={'/auth/new-account'}>Register</Link>
         </Button>
+        <Button>
+          <Link href={'/dashboard'}>dashboard</Link>
+        </Button>
       </div>
       <div className='space-x-2'>
         <p>Cambiar leguaje</p>

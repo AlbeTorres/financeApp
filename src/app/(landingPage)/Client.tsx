@@ -9,7 +9,6 @@ export const Client = () => {
 
   return (
     <div>
-      {' '}
       <Button onClick={() => changeL('en')}>ingles</Button>
       <Button onClick={() => changeL('es')}>español</Button>
     </div>
