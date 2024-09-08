@@ -35,6 +35,7 @@ model User {
   isTwofactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
   Settings              Settings?
+  Bank_Account          Bank_Account[]
 }
 
 model Account {
@@ -98,4 +99,12 @@ model Settings {
   language Languaje @default(en)
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String   @unique
+}
+
+model Bank_Account {
+  id      String  @id @default(uuid())
+  plaidId String?
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name    String
 }

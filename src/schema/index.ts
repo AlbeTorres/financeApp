@@ -16,3 +16,12 @@ export const RegisterSchema = z.object({
   password: z.string().min(8, { message: 'Minimun 8 characters required' }),
   name: z.string().min(1, { message: 'Name is required' }),
 })
+
+export const insertAccountSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+})
+
+export const updateAccountSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  id: z.string().uuid(),
+})
