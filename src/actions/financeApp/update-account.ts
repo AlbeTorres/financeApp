@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import { updateAccountSchema } from '@/schema'
+import { revalidatePath } from 'next/cache'
 import * as z from 'zod'
 import { parseResponse } from '../lib/parseResponse'
 
@@ -35,6 +36,7 @@ export const updateAccount = async ({ id, name }: z.infer<typeof updateAccountSc
       },
     })
 
+    revalidatePath('/account')
     return parseResponse(true, 200, null, 'Account updated succesfully!', bank_account)
   } catch (error) {
     console.log(error)

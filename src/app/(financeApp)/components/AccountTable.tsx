@@ -4,15 +4,15 @@ import { deleteAccounts } from '@/actions/financeApp/delete-account'
 import { Row } from '@tanstack/react-table'
 import toast from 'react-hot-toast'
 import { columns } from '../accounts/columns'
-import { Accounst } from '../interfaces'
+import { Account } from '../interfaces'
 import { DataTable } from './DataTable'
 
 type Props = {
-  data: Accounst[]
+  data: Account[]
 }
 
 export const AccountTable = ({ data }: Props) => {
-  const onDelete = async (row: Row<Accounst>[]) => {
+  const onDelete = async (row: Row<Account>[]) => {
     const ids = row.map(r => r.original.id)
     const result = await deleteAccounts(ids)
 

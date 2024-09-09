@@ -1,4 +1,4 @@
-export interface Accounst {
+export interface Account {
   id: string
   name: string
 }

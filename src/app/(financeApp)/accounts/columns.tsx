@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
-import { Accounst } from '../interfaces'
+import { Account } from '../interfaces'
+import { Actions } from './actions'
 
-export const columns: ColumnDef<Accounst>[] = [
+export const columns: ColumnDef<Account>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -41,5 +42,9 @@ export const columns: ColumnDef<Accounst>[] = [
         </Button>
       )
     },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => <Actions id={row.original.id} />,
   },
 ]

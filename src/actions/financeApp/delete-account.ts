@@ -25,7 +25,7 @@ export const deleteAccounts = async (deleteList: string[]) => {
 
     revalidatePath('/accounts')
 
-    return parseResponse(true, 200, null, 'Account updated succesfully!', bank_account)
+    return parseResponse(true, 200, null, 'Accounts deleted succesfully!', bank_account)
   } catch (error) {
     console.log(error)
     return parseResponse(false, 500, '', 'Something went wrong')
