@@ -1,9 +1,8 @@
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
-import { parseResponse } from '../lib/parseResponse'
+import { parseResponse } from '../../lib/parseResponse'
 
-export const getAccountById = async (id: string) => {
-  console.log(id)
+export const getAccountsByUser = async () => {
   try {
     const session = await auth()
     const userId = session?.user.id
@@ -12,11 +11,9 @@ export const getAccountById = async (id: string) => {
       return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
     }
 
-    const account = await prisma.bank_Account.findFirst({ where: { userId, id } })
+    const accounts = await prisma.bank_Account.findMany({ where: { userId } })
 
-    console.log(account)
-
-    return parseResponse(true, 200, null, 'Account retrieved successfully!', account)
+    return parseResponse(true, 200, null, 'Accounts retrieved successfully!', accounts)
   } catch (error) {
     console.log(error)
     return parseResponse(false, 500, '', 'Something went wrong')

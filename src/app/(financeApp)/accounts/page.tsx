@@ -1,11 +1,11 @@
-import { getAccountsByUser } from '@/actions/financeApp/get-accounts-by-user'
+import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-user'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import AccountButton from '../components/AccountButton'
 import { AccountSheet } from '../components/AccountSheet'
 import { AccountTable } from '../components/AccountTable'
+import OpenSheetButton from '../components/OpenSheetButton'
 import { Account } from '../interfaces'
 
-export default async function DashBoardPage() {
+export default async function AccountPage() {
   const result = await getAccountsByUser()
 
   const data = result.data as Account[]
@@ -17,7 +17,7 @@ export default async function DashBoardPage() {
         <Card className='border-none drop-shadow-sm'>
           <CardHeader className='gap-y-2 lg:flex-row lg:items-center lg:justify-between'>
             <CardTitle className='text-xl line-clamp-1'>Accounts page</CardTitle>
-            <AccountButton />
+            <OpenSheetButton sheet='account' />
           </CardHeader>
           <CardContent>
             <AccountTable data={data} />

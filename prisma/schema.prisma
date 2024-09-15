@@ -36,6 +36,7 @@ model User {
   twoFactorConfirmation TwoFactorConfirmation?
   Settings              Settings?
   Bank_Account          Bank_Account[]
+  Categories            Category[]
 }
 
 model Account {
@@ -102,6 +103,14 @@ model Settings {
 }
 
 model Bank_Account {
+  id      String  @id @default(uuid())
+  plaidId String?
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name    String
+}
+
+model Category {
   id      String  @id @default(uuid())
   plaidId String?
   userId  String
