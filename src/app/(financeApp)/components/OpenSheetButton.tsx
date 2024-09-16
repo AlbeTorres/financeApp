@@ -1,16 +1,18 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
-import { useAccountState } from '../store/AccountSheetSate copy'
+import { useAccountState } from '../store/AccountSheetSate'
 import { useCategoryState } from '../store/CategorySheetSate'
+import { useTransactionState } from '../store/TransactionSheetState'
 
 type Props = {
-  sheet: 'account' | 'category'
+  sheet: 'account' | 'category' | 'transaction'
 }
 
 const OpenSheetButton = ({ sheet }: Props) => {
   const account = useAccountState()
   const category = useCategoryState()
+  const transaction = useTransactionState()
 
   const openSheet = () => {
     switch (sheet) {
@@ -18,6 +20,8 @@ const OpenSheetButton = ({ sheet }: Props) => {
         account.onOpen()
       case 'category':
         category.onOpen()
+      case 'transaction':
+        transaction.onOpen()
     }
   }
 

@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
-import { Account } from '../interfaces'
+import { Category } from '../interfaces'
 import { Actions } from './actions'
 
-export const columns: ColumnDef<Account>[] = [
+export const columns: ColumnDef<Category>[] = [
   {
     id: 'select',
     header: ({ table }) => (

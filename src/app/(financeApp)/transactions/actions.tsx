@@ -8,14 +8,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Edit, MoreHorizontal } from 'lucide-react'
-import { useAccountState } from '../store/AccountSheetSate'
+import { useCategoryState } from '../store/CategorySheetSate'
 
 type Props = {
   id: string
 }
 
 export const Actions = ({ id }: Props) => {
-  const { onOpen } = useAccountState()
+  const { onOpen } = useCategoryState()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

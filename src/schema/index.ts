@@ -33,3 +33,21 @@ export const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   id: z.string().uuid(),
 })
+export const insertTransactionSchema = z.object({
+  date: z.coerce.date(),
+  accountId: z.string(),
+  categoryId: z.string().nullable().optional(),
+  payee: z.string(),
+  amount: z.string(),
+  notes: z.string().nullable().optional(),
+})
+
+export const updateTransactionSchema = z.object({
+  id: z.string().uuid(),
+  date: z.coerce.date(),
+  accountId: z.string(),
+  categoryId: z.string().nullable().optional(),
+  payee: z.string(),
+  amount: z.string(),
+  notes: z.string().nullable().optional(),
+})

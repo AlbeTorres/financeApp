@@ -37,6 +37,7 @@ model User {
   Settings              Settings?
   Bank_Account          Bank_Account[]
   Categories            Category[]
+  Transaction           Transaction[]
 }
 
 model Account {
@@ -103,17 +104,33 @@ model Settings {
 }
 
 model Bank_Account {
-  id      String  @id @default(uuid())
-  plaidId String?
-  userId  String
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name    String
+  id          String        @id @default(uuid())
+  plaidId     String?
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  Transaction Transaction[]
 }
 
 model Category {
-  id      String  @id @default(uuid())
-  plaidId String?
-  userId  String
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name    String
+  id          String        @id @default(uuid())
+  plaidId     String?
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id         String       @id @default(uuid())
+  amount     Int
+  payee      String?
+  notes      String
+  date       DateTime
+  accountId  String
+  account    Bank_Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   Category?    @relation(fields: [categoryId], references: [id])
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

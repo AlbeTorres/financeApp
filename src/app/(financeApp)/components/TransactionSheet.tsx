@@ -8,31 +8,29 @@ import {
 } from '@/components/ui/sheet'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Account } from '../interfaces'
+import { Transaction } from '../interfaces'
 
-import { useAccountState } from '../store/AccountSheetSate'
-import { NewAccountForm } from './NewAccountForm'
-import { UpdateAccountForm } from './UpdateAccountForm'
+import { useTransactionState } from '../store/TransactionSheetState'
 
-interface AccountData {
+interface TransactionData {
   state: boolean
   error_code: 401 | 500 | 403 | 404 | 200 | 400
   error: any | null
   message: string | null
-  data?: Account
+  data?: Transaction
 }
 
-export const AccountSheet = () => {
-  const [accountData, setAccountData] = useState<Account | null>(null)
-  const { isOpen, onClose, id } = useAccountState()
+export const TransactionSheet = () => {
+  const [transactionData, setTransactionData] = useState<Transaction | null>(null)
+  const { isOpen, onClose, id } = useTransactionState()
 
   useEffect(() => {
     const fetchAccountData = async () => {
       if (id) {
         const response = await fetch(`/api/account/${id}`)
-        const { data } = (await response.json()) as AccountData
+        const { data } = (await response.json()) as TransactionData
         if (data) {
-          setAccountData(data)
+          setTransactionData(data)
         } else {
           toast.error('Something went wrong!')
         }
@@ -46,16 +44,18 @@ export const AccountSheet = () => {
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className='space-y-4'>
         <SheetHeader>
-          <SheetTitle>{!id ? 'New Account' : 'Edit Account'}</SheetTitle>
+          <SheetTitle>{!id ? 'New Transaction' : 'Edit Transaction'}</SheetTitle>
           <SheetDescription>
-            {id ? 'Edit an existing account' : 'Create a new account to track your transactions'}
+            {id
+              ? 'Edit an existing transaction'
+              : 'Create a new transaction to track your finances'}
           </SheetDescription>
         </SheetHeader>
-        {id ? (
+        {/* {id ? (
           <UpdateAccountForm onClose={onClose} id={id!} defaultValues={accountData!} />
         ) : (
           <NewAccountForm />
-        )}
+        )} */}
       </SheetContent>
     </Sheet>
   )
