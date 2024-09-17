@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { useAccountState } from '../store/CategorySheetSate'
+import { useAccountState } from '../store/AccountSheetSate'
 
 export default function DashBoardPage() {
   const { onOpen } = useAccountState()

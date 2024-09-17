@@ -1,3 +1,5 @@
+import { createAccount } from '@/actions/financeApp/account/create-account'
+import { createCategory } from '@/actions/financeApp/category/create-category'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -11,6 +13,7 @@ import { insertTransactionSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { z } from 'zod'
 import { Select } from './Select'
 
@@ -21,16 +24,9 @@ type FormValues = z.input<typeof formSchema>
 type Props = {
   accountOptions: { label: string; value: string }[]
   categoryOptions: { label: string; value: string }[]
-  onCreateAccount: (value: string) => void
-  onCreateCategory: (value: string) => void
 }
 
-export const NewTransactionForm = ({
-  accountOptions,
-  categoryOptions,
-  onCreateAccount,
-  onCreateCategory,
-}: Props) => {
+export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) => {
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -49,6 +45,33 @@ export const NewTransactionForm = ({
     //   form.reset()
     //   setLoading(false)
     // }
+  }
+
+  const onCreateAccount = async (value: string) => {
+    setLoading(true)
+    const result = await createAccount({ name: value })
+
+    if (result.error !== null) {
+      toast.error('Something went wrong!')
+      setLoading(false)
+    } else {
+      toast.success('Account created successfully')
+      form.reset()
+      setLoading(false)
+    }
+  }
+  const onCreateCategory = async (value: string) => {
+    setLoading(true)
+    const result = await createCategory({ name: value })
+
+    if (result.error !== null) {
+      toast.error('Something went wrong!')
+      setLoading(false)
+    } else {
+      toast.success('Category created successfully')
+      form.reset()
+      setLoading(false)
+    }
   }
 
   return (
@@ -74,8 +97,28 @@ export const NewTransactionForm = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name='categoryId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{'Category'}</FormLabel>
+              <FormControl>
+                <Select
+                  placeholder='Select a Category'
+                  options={categoryOptions}
+                  onCreate={onCreateCategory}
+                  value={field.value}
+                  onChange={field.onChange}
+                  disable={loading}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button className='w-full' disabled={loading}>
-          Create account
+          Create transaction
         </Button>
       </form>
     </Form>
