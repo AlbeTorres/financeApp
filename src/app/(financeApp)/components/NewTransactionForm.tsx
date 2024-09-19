@@ -9,12 +9,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { insertTransactionSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
+import { AmountInput } from './AmountInput'
+import { DatePicker } from './DatePicker'
 import { Select } from './Select'
 
 const formSchema = insertTransactionSchema
@@ -30,7 +34,7 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { amount: '', payee: '', date: new Date() },
+    defaultValues: { amount: '', payee: '', date: undefined },
   })
 
   const handleSubmit = async (values: FormValues) => {
@@ -79,6 +83,18 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
       <form className='space-y-4 pt-4' onSubmit={form.handleSubmit(handleSubmit)}>
         <FormField
           control={form.control}
+          name='date'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DatePicker value={field.value} onChange={field.onChange} disable={loading} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name='accountId'
           render={({ field }) => (
             <FormItem>
@@ -111,6 +127,58 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
                   value={field.value}
                   onChange={field.onChange}
                   disable={loading}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='payee'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{'Payee'}</FormLabel>
+              <FormControl>
+                <Input
+                  className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
+                  {...field}
+                  placeholder='Add a payee'
+                  type='text'
+                  disabled={loading}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='amount'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{'Amount'}</FormLabel>
+              <FormControl>
+                <AmountInput {...field} disabled={loading} placeholder={'0.00'} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='notes'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{'Notes'}</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder='Optional notes'
+                  value={field.value ?? ''}
+                  className='w-full px-4 py-2 border rounded-md  focus:outline-none focus:!ring-1 focus:!ring-blue-600'
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage />

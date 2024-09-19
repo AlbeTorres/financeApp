@@ -21,6 +21,6 @@ export const TransactionTable = ({ data }: Props) => {
     }
   }
   return (
-    <DataTable columns={columns} data={data} filterKey='name' onDelete={row => onDelete(row)} />
+    <DataTable columns={columns} data={data} filterKey='date' onDelete={row => onDelete(row)} />
   )
 }
