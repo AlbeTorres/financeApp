@@ -30,6 +30,7 @@ type Props = {
   categoryOptions: { label: string; value: string }[]
 }
 
+//todo: añadir currencies al from y a la db
 export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) => {
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
