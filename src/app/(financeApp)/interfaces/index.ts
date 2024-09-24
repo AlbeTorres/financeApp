@@ -12,7 +12,22 @@ export interface Transaction {
   amount: number
   payee?: string
   accountId: string
+  accountName: string
   categoryId: string
+  categoryName: string
   notes: string
   date: string
+}
+export interface TransactionResponse {
+  id: string
+  amount: number
+  payee?: string
+  accountId: string
+  accountName: string
+  categoryId: string
+  categoryName: string
+  notes: string
+  date: string
+  category: Category
+  account: Account
 }

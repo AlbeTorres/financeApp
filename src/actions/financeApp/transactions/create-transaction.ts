@@ -7,11 +7,12 @@ import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 
 export const createTransaction = async (
-  amount: number,
+  amount: string,
   accountId: string,
-  categoryId: string,
-  notes: string,
-  date: string
+  categoryId: string | undefined | null,
+  notes: string | undefined | null,
+  date: Date,
+  payee: string
 ) => {
   const session = await auth()
   const userId = session?.user.id
@@ -26,6 +27,7 @@ export const createTransaction = async (
     categoryId,
     notes,
     date,
+    payee,
   })
 
   if (!validatedFields.success) {
@@ -41,6 +43,7 @@ export const createTransaction = async (
         categoryId,
         notes,
         date,
+        payee,
       },
       select: {
         id: true,

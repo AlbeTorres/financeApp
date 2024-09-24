@@ -123,9 +123,9 @@ model Category {
 
 model Transaction {
   id         String       @id @default(uuid())
-  amount     Int
+  amount     String
   payee      String?
-  notes      String
+  notes      String?
   date       DateTime
   accountId  String
   account    Bank_Account @relation(fields: [accountId], references: [id], onDelete: Cascade)

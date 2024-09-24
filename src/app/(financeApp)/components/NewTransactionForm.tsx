@@ -1,5 +1,6 @@
 import { createAccount } from '@/actions/financeApp/account/create-account'
 import { createCategory } from '@/actions/financeApp/category/create-category'
+import { createTransaction } from '@/actions/financeApp/transactions/create-transaction'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -39,17 +40,17 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
   })
 
   const handleSubmit = async (values: FormValues) => {
-    // const { amount } = values
-    // setLoading(true)
-    // const result = await createTransaction()
-    // if (result.error !== null) {
-    //   toast.error('Something went wrong!')
-    //   setLoading(false)
-    // } else {
-    //   toast.success('Account created successfully')
-    //   form.reset()
-    //   setLoading(false)
-    // }
+    const { amount, date, payee, categoryId, accountId, notes } = values
+    setLoading(true)
+    const result = await createTransaction(amount, accountId, categoryId, notes, date, payee)
+    if (result.error !== null) {
+      toast.error('Something went wrong!')
+      setLoading(false)
+    } else {
+      toast.success('Transaction created successfully')
+      form.reset()
+      setLoading(false)
+    }
   }
 
   const onCreateAccount = async (value: string) => {
