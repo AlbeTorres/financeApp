@@ -6,11 +6,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { useState } from 'react'
 import { Account, Category, Transaction } from '../interfaces'
 
 import { useTransactionState } from '../store/TransactionSheetState'
 import { NewTransactionForm } from './NewTransactionForm'
+import { UpdateTransactionForm } from './UpdateTransactionForm'
 
 interface TransactionData {
   state: boolean
@@ -27,24 +27,11 @@ type Props = {
 }
 
 export const TransactionSheet = ({ accounts, transactions, categories }: Props) => {
-  const [transactionData, setTransactionData] = useState<Transaction | null>(null)
   const { isOpen, onClose, id } = useTransactionState()
-
-  // useEffect(() => {
-  //   const fetchAccountData = async () => {
-  //     if (id) {
-  //       const response = await fetch(`/api/account/${id}`)
-  //       const { data } = (await response.json()) as TransactionData
-  //       if (data) {
-  //         setTransactionData(data)
-  //       } else {
-  //         toast.error('Something went wrong!')
-  //       }
-  //     }
-  //   }
-
-  //   fetchAccountData()
-  // }, [id])
+  let transaction: Transaction | undefined
+  if (id) {
+    transaction = transactions.find(t => t.id === id)
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -57,16 +44,20 @@ export const TransactionSheet = ({ accounts, transactions, categories }: Props) 
               : 'Create a new transaction to track your finances'}
           </SheetDescription>
         </SheetHeader>
-        {/* {id ? (
-          <UpdateAccountForm onClose={onClose} id={id!} defaultValues={accountData!} />
+        {id ? (
+          <UpdateTransactionForm
+            accountOptions={ParseOptionsData(accounts)}
+            categoryOptions={ParseOptionsData(categories)}
+            onClose={onClose}
+            id={id!}
+            defaultValues={transaction}
+          />
         ) : (
-          <NewAccountForm />
-        )} */}
-
-        <NewTransactionForm
-          accountOptions={ParseOptionsData(accounts)}
-          categoryOptions={ParseOptionsData(categories)}
-        />
+          <NewTransactionForm
+            accountOptions={ParseOptionsData(accounts)}
+            categoryOptions={ParseOptionsData(categories)}
+          />
+        )}
       </SheetContent>
     </Sheet>
   )

@@ -8,14 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Edit, MoreHorizontal } from 'lucide-react'
-import { useCategoryState } from '../store/CategorySheetSate'
+import { useTransactionState } from '../store/TransactionSheetState'
 
 type Props = {
   id: string
 }
 
 export const Actions = ({ id }: Props) => {
-  const { onOpen } = useCategoryState()
+  const { onOpen } = useTransactionState()
 
   return (
     <DropdownMenu>

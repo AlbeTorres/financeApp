@@ -38,15 +38,13 @@ export const getTransactionsByUser = async (from?: string, to?: string, accountI
       where: {
         accountId,
         userId,
-        //TODO:REVIZAR COMO Manejar el filtrado por fechas
+        //TODO:REVIZAR COMO Manejar el filtrado por fechas, hacer que filtre por transacciones en el mes, en lugar de 30 dias atras de la fecha actual
         // date: {
         //   gte: new Date(startDate),
         //   lte: new Date(endDate),
         // },
       },
     })
-
-    console.log(transactions)
 
     return parseResponse(true, 200, null, 'Transactions retrieved successfully!', transactions)
   } catch (error) {

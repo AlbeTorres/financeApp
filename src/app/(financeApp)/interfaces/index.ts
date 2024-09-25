@@ -9,7 +9,7 @@ export interface Category {
 
 export interface Transaction {
   id: string
-  amount: number
+  amount: string
   payee?: string
   accountId: string
   accountName: string
@@ -20,14 +20,14 @@ export interface Transaction {
 }
 export interface TransactionResponse {
   id: string
-  amount: number
+  amount: string
   payee?: string
   accountId: string
   accountName: string
   categoryId: string
   categoryName: string
   notes: string
-  date: string
+  date: Date
   category: Category
   account: Account
 }

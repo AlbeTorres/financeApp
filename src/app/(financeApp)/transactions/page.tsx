@@ -17,7 +17,6 @@ export default async function TransactionPage() {
   const categories = resultCategories.data as Category[]
 
   const data = result.map(transaction => parseData(transaction))
-  console.log(result)
 
   return (
     <>
@@ -46,5 +45,5 @@ const parseData = (data: TransactionResponse) => ({
   categoryId: data.categoryId,
   categoryName: data.category.name,
   notes: data.notes,
-  date: new Date(data.date).toLocaleDateString(),
+  date: data.date.toLocaleDateString(),
 })

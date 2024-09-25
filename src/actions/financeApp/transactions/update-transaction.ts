@@ -6,13 +6,14 @@ import { updateTransactionSchema } from '@/schema'
 import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 
-export const updateAccount = async (
+export const updateTransaction = async (
   id: string,
-  amount?: number,
-  accountId?: string,
-  categoryId?: string,
-  notes?: string,
-  date?: string
+  amount: string,
+  accountId: string,
+  categoryId: string | undefined | null,
+  notes: string | undefined | null,
+  date: Date,
+  payee: string
 ) => {
   const session = await auth()
   const userId = session?.user.id
@@ -28,6 +29,7 @@ export const updateAccount = async (
     categoryId,
     notes,
     date,
+    payee,
   })
 
   if (!validatedFields.success) {
@@ -47,6 +49,7 @@ export const updateAccount = async (
         categoryId,
         notes,
         date,
+        payee,
       },
       select: {
         id: true,
