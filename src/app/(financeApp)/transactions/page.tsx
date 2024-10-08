@@ -2,6 +2,8 @@ import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-
 import { getCategoriesByUser } from '@/actions/financeApp/category/get-categories-by-user'
 import { getTransactionsByUser } from '@/actions/financeApp/transactions/get-transactions-by-user'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AccountSheet } from '../components/AccountSheet'
+import { CategorySheet } from '../components/CategorySheet'
 import OpenSheetButton from '../components/OpenSheetButton'
 import { TransactionSheet } from '../components/TransactionSheet'
 import { TransactionTable } from '../components/TransactionTable'
@@ -20,6 +22,8 @@ export default async function TransactionPage() {
 
   return (
     <>
+      <AccountSheet />
+      <CategorySheet />
       <TransactionSheet accounts={accounts} categories={categories} transactions={data} />
       <div className='max-w-screen-2xl mx-auto w-full pb-10 -mt-24'>
         <Card className='border-none drop-shadow-sm'>

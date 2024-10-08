@@ -38,7 +38,7 @@ export const UpdateAccountForm = ({ id, defaultValues, onClose }: Props) => {
   })
   const [ConfirmDialog, confirm] = useConfirm(
     'Are you sure?',
-    'You are about to perform a bulk delete.'
+    'You are about to delete this account.'
   )
 
   useEffect(() => {

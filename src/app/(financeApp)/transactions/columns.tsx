@@ -5,7 +5,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 import { Transaction } from '../interfaces'
+import { AccountColumn } from './AccountColumn'
 import { Actions } from './actions'
+import { CategoryColumn } from './CategoryColumn'
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -56,6 +58,11 @@ export const columns: ColumnDef<Transaction>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      return (
+        <AccountColumn accountId={row.original.accountId} accountName={row.original.accountName} />
+      )
+    },
   },
   {
     accessorKey: 'categoryName',
@@ -68,6 +75,14 @@ export const columns: ColumnDef<Transaction>[] = [
           Category
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return (
+        <CategoryColumn
+          categoryId={row.original.categoryId}
+          categoryName={row.original.categoryName}
+        />
       )
     },
   },
