@@ -44,10 +44,10 @@ export const insertTransactionSchema = z.object({
 
 export const updateTransactionSchema = z.object({
   id: z.string().uuid(),
-  date: z.coerce.date(),
-  accountId: z.string(),
+  date: z.coerce.date().optional(),
+  accountId: z.string().optional(),
   categoryId: z.string().nullable().optional(),
-  payee: z.string(),
-  amount: z.string(),
+  payee: z.string().optional(),
+  amount: z.string().optional(),
   notes: z.string().nullable().optional(),
 })

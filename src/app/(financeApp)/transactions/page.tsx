@@ -46,8 +46,8 @@ const parseData = (data: TransactionResponse) => ({
   payee: data.payee,
   accountId: data.accountId,
   accountName: data.account.name,
-  categoryId: data.categoryId,
-  categoryName: data.category.name,
+  categoryId: data?.categoryId,
+  categoryName: data.category?.name,
   notes: data.notes,
   date: data.date.toLocaleDateString(),
 })

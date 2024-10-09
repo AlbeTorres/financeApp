@@ -24,7 +24,7 @@ interface CategoryData {
 
 export const CategorySheet = () => {
   const [categoryData, setCategoryData] = useState<Category | null>(null)
-  const { isOpen, onClose, id } = useCategoryState()
+  const { isOpen, onClose, id, transactionId } = useCategoryState()
 
   useEffect(() => {
     const fetchCategoryData = async () => {
@@ -56,7 +56,7 @@ export const CategorySheet = () => {
         {id ? (
           <UpdateCategoryForm onClose={onClose} id={id!} defaultValues={categoryData!} />
         ) : (
-          <NewCategoryForm />
+          <NewCategoryForm transactionId={transactionId} />
         )}
       </SheetContent>
     </Sheet>

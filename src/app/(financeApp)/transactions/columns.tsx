@@ -80,6 +80,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       return (
         <CategoryColumn
+          transactionId={row.original.id}
           categoryId={row.original.categoryId}
           categoryName={row.original.categoryName}
         />

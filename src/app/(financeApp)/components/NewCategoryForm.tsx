@@ -1,4 +1,5 @@
 import { createCategory } from '@/actions/financeApp/category/create-category'
+import { updateTransaction } from '@/actions/financeApp/transactions/update-transaction'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,7 +21,11 @@ const formSchema = insertCategorySchema.pick({ name: true })
 
 type FormValues = z.input<typeof formSchema>
 
-export const NewCategoryForm = () => {
+type Props = {
+  transactionId?: string
+}
+
+export const NewCategoryForm = ({ transactionId }: Props) => {
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -37,7 +42,20 @@ export const NewCategoryForm = () => {
       toast.error('Something went wrong!')
       setLoading(false)
     } else {
+      if (transactionId) {
+        const resultTransaction = await updateTransaction({
+          id: transactionId,
+          categoryId: result.data.id,
+        })
+
+        if (resultTransaction.error !== null) {
+          toast.error('Something went wrong and we couldn`t update your transaction!')
+          setLoading(false)
+        }
+      }
+
       toast.success('Category created successfully')
+
       form.reset()
       setLoading(false)
     }

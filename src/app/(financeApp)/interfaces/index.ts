@@ -13,8 +13,8 @@ export interface Transaction {
   payee?: string
   accountId: string
   accountName: string
-  categoryId: string
-  categoryName: string
+  categoryId?: string
+  categoryName?: string
   notes: string
   date: string
 }

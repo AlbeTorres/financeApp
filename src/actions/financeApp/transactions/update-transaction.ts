@@ -6,15 +6,25 @@ import { updateTransactionSchema } from '@/schema'
 import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 
-export const updateTransaction = async (
-  id: string,
-  amount: string,
-  accountId: string,
-  categoryId: string | undefined | null,
-  notes: string | undefined | null,
-  date: Date,
-  payee: string
-) => {
+type Props = {
+  id: string
+  amount?: string
+  accountId?: string
+  categoryId?: string | null
+  notes?: string | null
+  date?: Date
+  payee?: string | undefined
+}
+
+export const updateTransaction = async ({
+  id,
+  amount,
+  accountId,
+  categoryId,
+  notes,
+  date,
+  payee,
+}: Props) => {
   const session = await auth()
   const userId = session?.user.id
 
