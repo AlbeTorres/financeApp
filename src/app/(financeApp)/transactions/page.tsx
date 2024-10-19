@@ -1,13 +1,12 @@
 import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-user'
 import { getCategoriesByUser } from '@/actions/financeApp/category/get-categories-by-user'
 import { getTransactionsByUser } from '@/actions/financeApp/transactions/get-transactions-by-user'
+import { OpenSheetButton } from '@/components'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AccountSheet } from '../components/AccountSheet'
-import { CategorySheet } from '../components/CategorySheet'
-import OpenSheetButton from '../components/OpenSheetButton'
-import { TransactionSheet } from '../components/TransactionSheet'
-import { TransactionTable } from '../components/TransactionTable'
-import { Account, Category, TransactionResponse } from '../interfaces'
+import { Account, Category, TransactionResponse } from '@/interfaces'
+import { AccountSheet } from '../accounts/components'
+import { CategorySheet } from '../categories/components'
+import { TransactionSheet, TransactionTable } from './components'
 
 export default async function TransactionPage() {
   const resultTransactions = await getTransactionsByUser()

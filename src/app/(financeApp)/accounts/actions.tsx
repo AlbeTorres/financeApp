@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useAccountState } from '@/store'
 import { Edit, MoreHorizontal } from 'lucide-react'
-import { useAccountState } from '../store/AccountSheetSate'
 
 type Props = {
   id: string

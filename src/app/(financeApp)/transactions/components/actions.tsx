@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useTransactionState } from '@/store'
 import { Edit, MoreHorizontal } from 'lucide-react'
-import { useTransactionState } from '../store/TransactionSheetState'
 
 type Props = {
   id: string

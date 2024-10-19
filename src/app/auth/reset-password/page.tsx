@@ -1,4 +1,4 @@
-import { ChangePassword } from '../components/ChangePassword'
+import { ChangePassword } from '../components'
 
 export default function ResetPassword() {
   return <ChangePassword />

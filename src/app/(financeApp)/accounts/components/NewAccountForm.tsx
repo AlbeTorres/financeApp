@@ -1,5 +1,5 @@
-import { createCategory } from '@/actions/financeApp/category/create-category'
-import { updateTransaction } from '@/actions/financeApp/transactions/update-transaction'
+'use client'
+import { createAccount } from '@/actions/financeApp/account/create-account'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -10,22 +10,18 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { insertCategorySchema } from '@/schema'
+import { insertAccountSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
 
-const formSchema = insertCategorySchema.pick({ name: true })
+const formSchema = insertAccountSchema.pick({ name: true })
 
 type FormValues = z.input<typeof formSchema>
 
-type Props = {
-  transactionId?: string
-}
-
-export const NewCategoryForm = ({ transactionId }: Props) => {
+export const NewAccountForm = () => {
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -36,26 +32,13 @@ export const NewCategoryForm = ({ transactionId }: Props) => {
     const { name } = values
 
     setLoading(true)
-    const result = await createCategory({ name })
+    const result = await createAccount({ name })
 
     if (result.error !== null) {
       toast.error('Something went wrong!')
       setLoading(false)
     } else {
-      if (transactionId) {
-        const resultTransaction = await updateTransaction({
-          id: transactionId,
-          categoryId: result.data.id,
-        })
-
-        if (resultTransaction.error !== null) {
-          toast.error('Something went wrong and we couldn`t update your transaction!')
-          setLoading(false)
-        }
-      }
-
-      toast.success('Category created successfully')
-
+      toast.success('Account created successfully')
       form.reset()
       setLoading(false)
     }
@@ -84,7 +67,7 @@ export const NewCategoryForm = ({ transactionId }: Props) => {
           )}
         />
         <Button className='w-full' disabled={loading}>
-          Create category
+          Create account
         </Button>
       </form>
     </Form>

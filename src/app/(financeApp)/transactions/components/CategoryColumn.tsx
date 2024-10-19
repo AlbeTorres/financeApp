@@ -1,5 +1,5 @@
 import { TriangleAlertIcon } from 'lucide-react'
-import { useCategoryState } from '../store/CategorySheetSate'
+import { useCategoryState } from '../../../../store'
 
 type Props = {
   categoryId?: string

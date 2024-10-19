@@ -1,6 +1,6 @@
 'use client'
 
-import { AccountSheet } from '../components/AccountSheet'
+import { AccountSheet } from '../app/(financeApp)/accounts/components/AccountSheet'
 
 export const SheetProvider = () => {
   return (

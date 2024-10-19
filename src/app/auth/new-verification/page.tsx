@@ -1,4 +1,4 @@
-import { Outled } from '../components/Outled'
+import { Outled } from '../components'
 
 export default function NewVerification() {
   return (

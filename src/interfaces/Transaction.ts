@@ -1,11 +1,5 @@
-export interface Account {
-  id: string
-  name: string
-}
-export interface Category {
-  id: string
-  name: string
-}
+import { Account } from './Account'
+import { Category } from './Category'
 
 export interface Transaction {
   id: string
@@ -18,6 +12,7 @@ export interface Transaction {
   notes: string
   date: string
 }
+
 export interface TransactionResponse {
   id: string
   amount: string

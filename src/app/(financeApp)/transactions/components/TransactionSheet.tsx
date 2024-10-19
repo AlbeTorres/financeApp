@@ -6,9 +6,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Account, Category, Transaction } from '../interfaces'
 
-import { useTransactionState } from '../store/TransactionSheetState'
+import { Account, Category, Transaction } from '@/interfaces'
+import { useTransactionState } from '../../../../store/TransactionSheetState'
 import { NewTransactionForm } from './NewTransactionForm'
 import { UpdateTransactionForm } from './UpdateTransactionForm'
 

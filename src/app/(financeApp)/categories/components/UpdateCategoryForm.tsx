@@ -1,5 +1,6 @@
-import { deleteAccounts } from '@/actions/financeApp/account/delete-account'
-import { updateAccount } from '@/actions/financeApp/account/update-account'
+'use client'
+import { deleteCategories } from '@/actions/financeApp/category/delete-categories'
+import { updateCategory } from '@/actions/financeApp/category/update-category'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -10,16 +11,16 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { insertAccountSchema } from '@/schema'
+import { insertCategorySchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
-import { useConfirm } from '../hooks/use-confirm'
+import { useConfirm } from '../../../../hooks/use-confirm'
 
-const formSchema = insertAccountSchema.pick({ name: true })
+const formSchema = insertCategorySchema.pick({ name: true })
 
 type FormValues = z.input<typeof formSchema>
 
@@ -30,7 +31,7 @@ type Props = {
   onClose(): void
 }
 
-export const UpdateAccountForm = ({ id, defaultValues, onClose }: Props) => {
+export const UpdateCategoryForm = ({ id, defaultValues, onClose }: Props) => {
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -38,7 +39,7 @@ export const UpdateAccountForm = ({ id, defaultValues, onClose }: Props) => {
   })
   const [ConfirmDialog, confirm] = useConfirm(
     'Are you sure?',
-    'You are about to delete this account.'
+    'You are about to perform a bulk delete.'
   )
 
   useEffect(() => {
@@ -49,12 +50,12 @@ export const UpdateAccountForm = ({ id, defaultValues, onClose }: Props) => {
     setLoading(true)
     const { name } = values
 
-    const result = await updateAccount({ id, name })
+    const result = await updateCategory({ id, name })
 
     if (result.error !== null) {
       toast.error('Something went wrong!')
     } else {
-      toast.success('Account updated successfully')
+      toast.success('Category updated successfully')
       form.reset()
     }
     onClose()
@@ -65,7 +66,7 @@ export const UpdateAccountForm = ({ id, defaultValues, onClose }: Props) => {
 
     if (ok) {
       setLoading(true)
-      const result = await deleteAccounts([id])
+      const result = await deleteCategories([id])
       form.reset()
       if (result.error) {
         toast.error('Something went wrong!')
@@ -112,7 +113,7 @@ export const UpdateAccountForm = ({ id, defaultValues, onClose }: Props) => {
             disabled={loading || defaultValues === null}
           >
             <Trash className='size-4 mr-2' />
-            Delete account
+            Delete category
           </Button>
         </form>
       </Form>

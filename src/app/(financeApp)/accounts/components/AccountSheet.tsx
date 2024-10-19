@@ -6,21 +6,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { Account, AccountResponseData } from '@/interfaces'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Account } from '../interfaces'
 
-import { useAccountState } from '../store/AccountSheetSate'
+import { useAccountState } from '@/store/AccountSheetSate'
 import { NewAccountForm } from './NewAccountForm'
 import { UpdateAccountForm } from './UpdateAccountForm'
-
-interface AccountData {
-  state: boolean
-  error_code: 401 | 500 | 403 | 404 | 200 | 400
-  error: any | null
-  message: string | null
-  data?: Account
-}
 
 export const AccountSheet = () => {
   const [accountData, setAccountData] = useState<Account | null>(null)
@@ -30,7 +22,7 @@ export const AccountSheet = () => {
     const fetchAccountData = async () => {
       if (id) {
         const response = await fetch(`/api/account/${id}`)
-        const { data } = (await response.json()) as AccountData
+        const { data } = (await response.json()) as AccountResponseData
         if (data) {
           setAccountData(data)
         } else {

@@ -6,21 +6,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { Category, CategoryResponseData } from '@/interfaces'
+import { useCategoryState } from '@/store'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Category } from '../interfaces'
-
-import { useCategoryState } from '../store/CategorySheetSate'
 import { NewCategoryForm } from './NewCategoryForm'
 import { UpdateCategoryForm } from './UpdateCategoryForm'
-
-interface CategoryData {
-  state: boolean
-  error_code: 401 | 500 | 403 | 404 | 200 | 400
-  error: any | null
-  message: string | null
-  data?: Category
-}
 
 export const CategorySheet = () => {
   const [categoryData, setCategoryData] = useState<Category | null>(null)
@@ -30,7 +21,7 @@ export const CategorySheet = () => {
     const fetchCategoryData = async () => {
       if (id) {
         const response = await fetch(`/api/category/${id}`)
-        const { data } = (await response.json()) as CategoryData
+        const { data } = (await response.json()) as CategoryResponseData
         if (data) {
           setCategoryData(data)
         } else {

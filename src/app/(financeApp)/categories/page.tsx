@@ -1,9 +1,10 @@
 import { getCategoriesByUser } from '@/actions/financeApp/category/get-categories-by-user'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CategorySheet } from '../components/CategorySheet'
-import { CategoryTable } from '../components/CategoryTable'
-import OpenSheetButton from '../components/OpenSheetButton'
-import { Category } from '../interfaces'
+
+import { OpenSheetButton } from '@/components'
+
+import { Category } from '@/interfaces'
+import { CategorySheet, CategoryTable } from './components'
 
 export default async function CategoriesPage() {
   const result = await getCategoriesByUser()

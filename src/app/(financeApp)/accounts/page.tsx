@@ -1,9 +1,9 @@
 import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-user'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AccountSheet } from '../components/AccountSheet'
-import { AccountTable } from '../components/AccountTable'
-import OpenSheetButton from '../components/OpenSheetButton'
-import { Account } from '../interfaces'
+
+import { OpenSheetButton } from '@/components'
+import { Account } from '@/interfaces'
+import { AccountSheet, AccountTable } from './components'
 
 export default async function AccountPage() {
   const result = await getAccountsByUser()

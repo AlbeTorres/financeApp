@@ -1,4 +1,4 @@
-import { useAccountState } from '../store/AccountSheetSate'
+import { useAccountState } from '@/store'
 
 type Props = {
   accountId: string

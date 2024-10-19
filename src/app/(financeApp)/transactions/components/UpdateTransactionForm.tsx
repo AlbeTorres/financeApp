@@ -1,3 +1,4 @@
+'use client'
 import { createAccount } from '@/actions/financeApp/account/create-account'
 import { createCategory } from '@/actions/financeApp/category/create-category'
 import { deleteTransactions } from '@/actions/financeApp/transactions/delete-transactions'
@@ -20,11 +21,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
-import { useConfirm } from '../hooks/use-confirm'
-import { Transaction } from '../interfaces'
-import { AmountInput } from './AmountInput'
-import { DatePicker } from './DatePicker'
-import { Select } from './Select'
+import { AmountInput } from '../../../../components/AmountInput'
+import { DatePicker } from '../../../../components/DatePicker'
+import { Select } from '../../../../components/Select'
+import { useConfirm } from '../../../../hooks/use-confirm'
+import { Transaction } from '../../../../interfaces'
 
 const formSchema = insertTransactionSchema
 

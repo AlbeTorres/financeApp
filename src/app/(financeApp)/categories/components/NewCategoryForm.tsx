@@ -1,4 +1,6 @@
-import { createAccount } from '@/actions/financeApp/account/create-account'
+'use client'
+import { createCategory } from '@/actions/financeApp/category/create-category'
+import { updateTransaction } from '@/actions/financeApp/transactions/update-transaction'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -9,18 +11,22 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { insertAccountSchema } from '@/schema'
+import { insertCategorySchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
 
-const formSchema = insertAccountSchema.pick({ name: true })
+const formSchema = insertCategorySchema.pick({ name: true })
 
 type FormValues = z.input<typeof formSchema>
 
-export const NewAccountForm = () => {
+type Props = {
+  transactionId?: string
+}
+
+export const NewCategoryForm = ({ transactionId }: Props) => {
   const [loading, setLoading] = useState(false)
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -31,13 +37,26 @@ export const NewAccountForm = () => {
     const { name } = values
 
     setLoading(true)
-    const result = await createAccount({ name })
+    const result = await createCategory({ name })
 
     if (result.error !== null) {
       toast.error('Something went wrong!')
       setLoading(false)
     } else {
-      toast.success('Account created successfully')
+      if (transactionId) {
+        const resultTransaction = await updateTransaction({
+          id: transactionId,
+          categoryId: result.data.id,
+        })
+
+        if (resultTransaction.error !== null) {
+          toast.error('Something went wrong and we couldn`t update your transaction!')
+          setLoading(false)
+        }
+      }
+
+      toast.success('Category created successfully')
+
       form.reset()
       setLoading(false)
     }
@@ -66,7 +85,7 @@ export const NewAccountForm = () => {
           )}
         />
         <Button className='w-full' disabled={loading}>
-          Create account
+          Create category
         </Button>
       </form>
     </Form>

@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useCategoryState } from '@/store'
 import { Edit, MoreHorizontal } from 'lucide-react'
-import { useCategoryState } from '../store/CategorySheetSate'
 
 type Props = {
   id: string

@@ -1,6 +1,8 @@
+'use client'
 import { createAccount } from '@/actions/financeApp/account/create-account'
 import { createCategory } from '@/actions/financeApp/category/create-category'
 import { createTransaction } from '@/actions/financeApp/transactions/create-transaction'
+import { AmountInput, DatePicker, Select } from '@/components'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -18,9 +20,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
-import { AmountInput } from './AmountInput'
-import { DatePicker } from './DatePicker'
-import { Select } from './Select'
 
 const formSchema = insertTransactionSchema
 
