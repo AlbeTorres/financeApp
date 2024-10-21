@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Account, Category, TransactionResponse } from '@/interfaces'
 import { AccountSheet } from '../accounts/components'
 import { CategorySheet } from '../categories/components'
-import { TransactionSheet, TransactionTable } from './components'
+import { TransactionSheet, TransactionTable, UploadButton } from './components'
 
 export default async function TransactionPage() {
   const resultTransactions = await getTransactionsByUser()
@@ -27,8 +27,11 @@ export default async function TransactionPage() {
       <div className='max-w-screen-2xl mx-auto w-full pb-10 -mt-24'>
         <Card className='border-none drop-shadow-sm'>
           <CardHeader className='gap-y-2 lg:flex-row lg:items-center lg:justify-between'>
-            <CardTitle className='text-xl line-clamp-1'>Transactions page</CardTitle>
-            <OpenSheetButton sheet='transaction' />
+            <CardTitle className='text-xl line-clamp-1'>Transactions History</CardTitle>
+            <div className='flex items-center gap-2'>
+              <OpenSheetButton sheet='transaction' />
+              <UploadButton />
+            </div>
           </CardHeader>
           <CardContent>
             <TransactionTable data={data} />
