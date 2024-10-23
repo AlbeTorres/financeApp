@@ -3,8 +3,9 @@
 import { deleteTransactions } from '@/actions/financeApp/transactions/delete-transactions'
 import { Row } from '@tanstack/react-table'
 import toast from 'react-hot-toast'
-import { DataTable } from '../../../../components/DataTable'
-import { Transaction } from '../../../../interfaces'
+
+import { DataTable } from '@/components'
+import { Transaction } from '@/interfaces'
 import { columns } from './columns'
 
 type Props = {

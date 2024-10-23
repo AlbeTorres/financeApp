@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Account, Category, TransactionResponse } from '@/interfaces'
 import { AccountSheet } from '../accounts/components'
 import { CategorySheet } from '../categories/components'
-import { TransactionSheet, TransactionTable, UploadButton } from './components'
+import { TransactionSheet, UploadButton } from './components'
+import { TransactionPageContent } from './components/TransactionPageContent'
 
 export default async function TransactionPage() {
   const resultTransactions = await getTransactionsByUser()
@@ -34,7 +35,7 @@ export default async function TransactionPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <TransactionTable data={data} />
+            <TransactionPageContent data={data} />
           </CardContent>
         </Card>
       </div>
