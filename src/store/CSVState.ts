@@ -1,3 +1,4 @@
+import { IMPORT_RESULT } from '@/interfaces'
 import { create } from 'zustand'
 
 enum VARIANTS {
@@ -5,13 +6,21 @@ enum VARIANTS {
   IMPORT = 'IMPORT',
 }
 type Props = {
+  importResult: IMPORT_RESULT
   isImporting: 'LIST' | 'IMPORT'
   onImport: () => void
-  onClose: () => void
+  onCancelImport: () => void
+  setResults: (results: IMPORT_RESULT) => void
 }
 
 export const useCSVState = create<Props>(set => ({
+  importResult: {
+    data: [],
+    errors: [],
+    meta: {},
+  },
   isImporting: VARIANTS.LIST,
   onImport: () => set({ isImporting: 'IMPORT' }),
-  onClose: () => set({ isImporting: 'LIST' }),
+  onCancelImport: () => set({ isImporting: 'LIST' }),
+  setResults: (results: IMPORT_RESULT) => set({ importResult: results }),
 }))

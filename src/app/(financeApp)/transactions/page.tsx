@@ -1,12 +1,10 @@
 import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-user'
 import { getCategoriesByUser } from '@/actions/financeApp/category/get-categories-by-user'
 import { getTransactionsByUser } from '@/actions/financeApp/transactions/get-transactions-by-user'
-import { OpenSheetButton } from '@/components'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Account, Category, TransactionResponse } from '@/interfaces'
 import { AccountSheet } from '../accounts/components'
 import { CategorySheet } from '../categories/components'
-import { TransactionSheet, UploadButton } from './components'
+import { TransactionSheet } from './components'
 import { TransactionPageContent } from './components/TransactionPageContent'
 
 export default async function TransactionPage() {
@@ -25,20 +23,7 @@ export default async function TransactionPage() {
       <AccountSheet />
       <CategorySheet />
       <TransactionSheet accounts={accounts} categories={categories} transactions={data} />
-      <div className='max-w-screen-2xl mx-auto w-full pb-10 -mt-24'>
-        <Card className='border-none drop-shadow-sm'>
-          <CardHeader className='gap-y-2 lg:flex-row lg:items-center lg:justify-between'>
-            <CardTitle className='text-xl line-clamp-1'>Transactions History</CardTitle>
-            <div className='flex items-center gap-2'>
-              <OpenSheetButton sheet='transaction' />
-              <UploadButton />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <TransactionPageContent data={data} />
-          </CardContent>
-        </Card>
-      </div>
+      <TransactionPageContent data={data} />
     </>
   )
 }
