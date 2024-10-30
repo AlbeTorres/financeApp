@@ -16,7 +16,6 @@ const requiredOptions = ['amount', 'date', 'payee']
 
 export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumns>({})
-  console.log(data)
 
   const header = data[0]
   const body = data.slice(1)

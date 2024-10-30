@@ -23,7 +23,8 @@ import toast from 'react-hot-toast'
 import { z } from 'zod'
 import { AmountInput } from '../../../../components/AmountInput'
 import { DatePicker } from '../../../../components/DatePicker'
-import { Select } from '../../../../components/Select'
+
+import { SelectComponent } from '@/components'
 import { useConfirm } from '../../../../hooks/use-confirm'
 import { Transaction } from '../../../../interfaces'
 
@@ -149,7 +150,7 @@ export const UpdateTransactionForm = ({
               <FormItem>
                 <FormLabel>{'Account'}</FormLabel>
                 <FormControl>
-                  <Select
+                  <SelectComponent
                     placeholder='Select an account'
                     options={accountOptions}
                     onCreate={onCreateAccount}
@@ -169,7 +170,7 @@ export const UpdateTransactionForm = ({
               <FormItem>
                 <FormLabel>{'Category'}</FormLabel>
                 <FormControl>
-                  <Select
+                  <SelectComponent
                     placeholder='Select a Category'
                     options={categoryOptions}
                     onCreate={onCreateCategory}

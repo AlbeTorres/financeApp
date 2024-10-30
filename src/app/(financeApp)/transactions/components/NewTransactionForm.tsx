@@ -2,7 +2,7 @@
 import { createAccount } from '@/actions/financeApp/account/create-account'
 import { createCategory } from '@/actions/financeApp/category/create-category'
 import { createTransaction } from '@/actions/financeApp/transactions/create-transaction'
-import { AmountInput, DatePicker, Select } from '@/components'
+import { AmountInput, DatePicker, SelectComponent } from '@/components'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -101,7 +101,7 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
             <FormItem>
               <FormLabel>{'Account'}</FormLabel>
               <FormControl>
-                <Select
+                <SelectComponent
                   placeholder='Select an account'
                   options={accountOptions}
                   onCreate={onCreateAccount}
@@ -121,7 +121,7 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
             <FormItem>
               <FormLabel>{'Category'}</FormLabel>
               <FormControl>
-                <Select
+                <SelectComponent
                   placeholder='Select a Category'
                   options={categoryOptions}
                   onCreate={onCreateCategory}
