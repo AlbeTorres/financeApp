@@ -26,7 +26,7 @@ const OpenSheetButton = ({ sheet }: Props) => {
   }
 
   return (
-    <Button onClick={() => openSheet()} size='sm'>
+    <Button className='w-full lg:w-auto' onClick={() => openSheet()} size='sm'>
       <Plus className='size-4 mr-2' />
       Add new
     </Button>

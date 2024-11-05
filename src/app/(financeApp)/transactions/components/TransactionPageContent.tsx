@@ -39,7 +39,7 @@ export const TransactionPageContent = ({ data }: Props) => {
       <Card className='border-none drop-shadow-sm'>
         <CardHeader className='gap-y-2 lg:flex-row lg:items-center lg:justify-between'>
           <CardTitle className='text-xl line-clamp-1'>Transactions History</CardTitle>
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center lg:flex-row flex-col gap-2'>
             <OpenSheetButton sheet='transaction' />
             <UploadButton />
           </div>
