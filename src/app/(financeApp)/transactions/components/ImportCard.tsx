@@ -41,6 +41,43 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
     requiredOptions.includes(column!)
   ).length
 
+  const handleContinue = () => {
+    const getColumnIndex = (column: string) => {
+      return column.split('_')[1]
+    }
+
+    const mappedData = {
+      headers: header.map((_header, index) => {
+        const columnIndex = getColumnIndex(`column_${index}`)
+        return selectedColumns[`column_${columnIndex}`] || null
+      }),
+      body: body
+        .map(row => {
+          const transformedRow = row.map((cell, index) => {
+            const columnIndex = getColumnIndex(`column_${index}`)
+            return selectedColumns[`column_${columnIndex}`] ? cell : null
+          })
+
+          return transformedRow.every(item => item === null) ? [] : transformedRow
+        })
+        .filter(row => row.length > 0),
+    }
+
+    const arrayOfData = mappedData.body.map(row => {
+      return row.reduce((acc: any, cell, index) => {
+        const header = mappedData.headers[index]
+
+        if (header) {
+          acc[header] = cell
+        }
+        return acc
+      }, {})
+    })
+
+    console.log(arrayOfData)
+    console.log(mappedData.headers)
+  }
+
   return (
     <>
       <div className='max-w-screen-2xl mx-auto w-full pb-10 -mt-24'>
@@ -55,7 +92,7 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
                 size={'sm'}
                 className='w-full lg:w-auto'
                 disabled={progress < requiredOptions.length}
-                onClick={() => {}}
+                onClick={handleContinue}
               >
                 Continue ({progress}/{requiredOptions.length})
               </Button>
