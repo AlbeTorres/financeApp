@@ -12,6 +12,12 @@ export interface Transaction {
   notes: string
   date: string
 }
+export interface CSVTransaction {
+  amount: string
+  payee?: string
+  notes?: string
+  date: string
+}
 
 export interface TransactionResponse {
   id: string

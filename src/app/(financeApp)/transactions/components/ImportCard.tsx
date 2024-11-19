@@ -1,5 +1,6 @@
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components'
-import { SelectedColumns } from '@/interfaces'
+import { CSVTransaction, SelectedColumns } from '@/interfaces'
+import { format, isValid, parse } from 'date-fns'
 import { useState } from 'react'
 import { ImportTable } from './ImportTable'
 
@@ -9,8 +10,24 @@ type Props = {
   onSubmit: (data: any) => void
 }
 
-const dateFormat = 'yyyy-MM-dd HH:mm:ss'
-const outputFormat = 'yyyy-MM-dd'
+const format1 = 'yyyy-MM-dd HH:mm:ss'
+const format2 = 'yyyy-MM-dd'
+const format3 = 'dd/MM/yyyy'
+const format4 = 'dd-MM-yyyy'
+
+const formatDate = (date: string) => {
+  if (isValid(parse(date, format1, new Date()))) {
+    return format(parse(date, format1, new Date()), format2)
+  } else if (isValid(parse(date, format2, new Date()))) {
+    return format(parse(date, format2, new Date()), format2)
+  } else if (isValid(parse(date, format3, new Date()))) {
+    return format(parse(date, format3, new Date()), format2)
+  } else if (isValid(parse(date, format4, new Date()))) {
+    return format(parse(date, format4, new Date()), format2)
+  }
+
+  return 'invalid date format'
+}
 
 const requiredOptions = ['amount', 'date', 'payee']
 
@@ -63,19 +80,28 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
         .filter(row => row.length > 0),
     }
 
-    const arrayOfData = mappedData.body.map(row => {
-      return row.reduce((acc: any, cell, index) => {
-        const header = mappedData.headers[index]
+    const arrayOfData = mappedData.body
+      .map(row => {
+        const result = row.reduce((acc: any, cell, index) => {
+          const header = mappedData.headers[index]
 
-        if (header) {
-          acc[header] = cell
-        }
-        return acc
-      }, {})
-    })
+          if (header && cell) {
+            acc[header] = cell
+          }
+          return acc
+        }, {})
 
-    console.log(arrayOfData)
-    console.log(mappedData.headers)
+        // Solo devuelve el objeto si contiene alguna clave
+        return Object.keys(result).length > 0 ? result : null
+      })
+      .filter(Boolean)
+
+    const formattedData: CSVTransaction[] = arrayOfData.map(item => ({
+      ...item,
+      date: formatDate(item.date),
+    }))
+
+    onSubmit(formattedData)
   }
 
   return (

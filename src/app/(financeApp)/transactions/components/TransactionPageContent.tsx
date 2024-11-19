@@ -1,9 +1,8 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle, OpenSheetButton } from '@/components'
-import { Transaction, VARIANTS } from '@/interfaces'
+import { CSVTransaction, Transaction, VARIANTS } from '@/interfaces'
 import { useCSVState } from '@/store'
-import { useState } from 'react'
 import { ImportCard } from './ImportCard'
 import { TransactionTable } from './TransactionTable'
 import { UploadButton } from './UploadButton'
@@ -13,9 +12,9 @@ type Props = {
 }
 
 export const TransactionPageContent = ({ data }: Props) => {
-  //sustituir este state por un store para cambiar la vista y activarlo con el uploadButton component
-  const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST)
   const { importResult, isImporting, setResults, onCancelImport } = useCSVState()
+
+  const onSubmitImport = async (values: CSVTransaction[]) => {}
 
   const onCancelImportFunction = () => {
     setResults({ data: [], errors: [], meta: {} })
