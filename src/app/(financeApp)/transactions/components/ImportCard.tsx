@@ -1,6 +1,5 @@
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components'
 import { CSVTransaction, SelectedColumns } from '@/interfaces'
-import { format, isValid, parse } from 'date-fns'
 import { useState } from 'react'
 import { ImportTable } from './ImportTable'
 
@@ -10,24 +9,27 @@ type Props = {
   onSubmit: (data: any) => void
 }
 
-const format1 = 'yyyy-MM-dd HH:mm:ss'
-const format2 = 'yyyy-MM-dd'
-const format3 = 'dd/MM/yyyy'
-const format4 = 'dd-MM-yyyy'
+// const format1 = 'yyyy-MM-dd HH:mm:ss'
+// const format2 = 'yyyy-MM-dd'
+// const format3 = 'dd/MM/yyyy'
+// const format4 = 'dd-MM-yyyy'
+// const format5 = 'MM/dd/yyyy'
 
-const formatDate = (date: string) => {
-  if (isValid(parse(date, format1, new Date()))) {
-    return format(parse(date, format1, new Date()), format2)
-  } else if (isValid(parse(date, format2, new Date()))) {
-    return format(parse(date, format2, new Date()), format2)
-  } else if (isValid(parse(date, format3, new Date()))) {
-    return format(parse(date, format3, new Date()), format2)
-  } else if (isValid(parse(date, format4, new Date()))) {
-    return format(parse(date, format4, new Date()), format2)
-  }
+// const formatDate = (date: string) => {
+//   if (isValid(parse(date, format1, new Date()))) {
+//     return format(parse(date, format1, new Date()), format2)
+//   } else if (isValid(parse(date, format2, new Date()))) {
+//     return format(parse(date, format2, new Date()), format2)
+//   } else if (isValid(parse(date, format3, new Date()))) {
+//     return format(parse(date, format3, new Date()), format2)
+//   } else if (isValid(parse(date, format4, new Date()))) {
+//     return format(parse(date, format4, new Date()), format2)
+//   } else if (isValid(parse(date, format5, new Date()))) {
+//     return format(parse(date, format5, new Date()), format2)
+//   }
 
-  return 'invalid date format'
-}
+//   return 'invalid date format'
+// }
 
 const requiredOptions = ['amount', 'date', 'payee']
 
@@ -98,7 +100,7 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
 
     const formattedData: CSVTransaction[] = arrayOfData.map(item => ({
       ...item,
-      date: formatDate(item.date),
+      date: new Date(item.date),
     }))
 
     onSubmit(formattedData)

@@ -14,9 +14,9 @@ export interface Transaction {
 }
 export interface CSVTransaction {
   amount: string
-  payee?: string
+  payee: string
   notes?: string
-  date: string
+  date: Date
 }
 
 export interface TransactionResponse {

@@ -1,8 +1,10 @@
 'use client'
-
+import { createTransactionsBulk } from '@/actions/financeApp/transactions/create-transaction-bulk'
 import { Card, CardContent, CardHeader, CardTitle, OpenSheetButton } from '@/components'
+import { useSelectAccount } from '@/hooks/use-select-account'
 import { CSVTransaction, Transaction, VARIANTS } from '@/interfaces'
 import { useCSVState } from '@/store'
+import toast from 'react-hot-toast'
 import { ImportCard } from './ImportCard'
 import { TransactionTable } from './TransactionTable'
 import { UploadButton } from './UploadButton'
@@ -14,7 +16,20 @@ type Props = {
 export const TransactionPageContent = ({ data }: Props) => {
   const { importResult, isImporting, setResults, onCancelImport } = useCSVState()
 
-  const onSubmitImport = async (values: CSVTransaction[]) => {}
+  const [AccountDialog, confirm] = useSelectAccount()
+
+  const onSubmitImport = async (values: CSVTransaction[]) => {
+    const accountId = await confirm()
+
+    if (!accountId) {
+      return toast.error('Please select an account to continue.')
+    }
+
+    const data = values.map(value => ({ ...value, accountId: accountId as string }))
+
+    const response = await createTransactionsBulk(data)
+    console.log(response)
+  }
 
   const onCancelImportFunction = () => {
     setResults({ data: [], errors: [], meta: {} })
@@ -24,10 +39,11 @@ export const TransactionPageContent = ({ data }: Props) => {
   if (isImporting === VARIANTS.IMPORT) {
     return (
       <>
+        <AccountDialog />
         <ImportCard
           data={importResult.data}
           onCancel={onCancelImportFunction}
-          onSubmit={() => {}}
+          onSubmit={onSubmitImport}
         />
       </>
     )
