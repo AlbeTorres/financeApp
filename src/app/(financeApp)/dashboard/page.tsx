@@ -1,14 +1,11 @@
-'use client'
+import { getSummary } from '@/actions/financeApp/dashboard/summary'
 
-import { Button } from '@/components/ui/button'
-import { useAccountState } from '../../../store'
-
-export default function DashBoardPage() {
-  const { onOpen } = useAccountState()
+export default async function DashBoardPage() {
+  const summary = await getSummary()
+  console.log(summary)
   return (
     <div>
-      <h1>Dashboard page</h1>
-      <Button onClick={() => onOpen()}>Add an account</Button>
+      <h1>{'dashboard'}</h1>
     </div>
   )
 }
