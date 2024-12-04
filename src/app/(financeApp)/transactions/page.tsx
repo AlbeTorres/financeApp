@@ -2,6 +2,7 @@ import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-
 import { getCategoriesByUser } from '@/actions/financeApp/category/get-categories-by-user'
 import { getTransactionsByUser } from '@/actions/financeApp/transactions/get-transactions-by-user'
 import { Account, Category, TransactionResponse } from '@/interfaces'
+import QueryProvider from '@/providers/ReactQueryProvider'
 import { AccountSheet } from '../accounts/components'
 import { CategorySheet } from '../categories/components'
 import { TransactionSheet } from './components'
@@ -23,7 +24,9 @@ export default async function TransactionPage() {
       <AccountSheet />
       <CategorySheet />
       <TransactionSheet accounts={accounts} categories={categories} transactions={data} />
-      <TransactionPageContent data={data} />
+      <QueryProvider>
+        <TransactionPageContent data={data} />
+      </QueryProvider>
     </>
   )
 }

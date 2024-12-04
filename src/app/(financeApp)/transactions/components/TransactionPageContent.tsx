@@ -3,6 +3,7 @@ import { createTransactionsBulk } from '@/actions/financeApp/transactions/create
 import { Card, CardContent, CardHeader, CardTitle, OpenSheetButton } from '@/components'
 import { useSelectAccount } from '@/hooks/use-select-account'
 import { CSVTransaction, Transaction, VARIANTS } from '@/interfaces'
+
 import { useCSVState } from '@/store'
 import toast from 'react-hot-toast'
 import { ImportCard } from './ImportCard'
@@ -28,7 +29,14 @@ export const TransactionPageContent = ({ data }: Props) => {
     const data = values.map(value => ({ ...value, accountId: accountId as string }))
 
     const response = await createTransactionsBulk(data)
-    console.log(response)
+
+    if (response.error !== null) {
+      toast.error('Something went wrong!')
+    } else {
+      toast.success(`${response.data.length} transactions created successfully!`)
+      console.log(response)
+      onCancelImport()
+    }
   }
 
   const onCancelImportFunction = () => {

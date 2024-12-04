@@ -1,5 +1,4 @@
-import { createAccount } from '@/actions/financeApp/account/create-account'
-import { SelectComponent } from '@/components'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components'
 import { Button } from '@/components/ui/button'
 import {
   DialogContent,
@@ -7,53 +6,36 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@/components/ui/dialog'
-import { Account, AccountsResponseData } from '@/interfaces'
 import { Dialog, DialogTitle } from '@radix-ui/react-dialog'
-import { useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useAccounts, useCreateAccount } from './api/account.hook'
 
 export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] => {
-  const [accountData, setAccountData] = useState<Account[] | null>(null)
-  const [loading, setLoading] = useState(false)
+  const accountQuery = useAccounts()
+  const queryClient = useQueryClient()
+  const accountOptions = (accountQuery.data?.data ?? []).map(account => ({
+    label: account.name,
+    value: account.id,
+  }))
   const [promise, setPromise] = useState<{ resolve: (value: string | undefined) => void } | null>(
     null
   )
 
-  useEffect(() => {
-    const fetchAccountData = async () => {
-      setLoading(true)
-      const response = await fetch(`/api/account/`)
-      const { data } = (await response.json()) as AccountsResponseData
-      if (data) {
-        setAccountData(data)
-      } else {
-        toast.error('Something went wrong!')
-      }
-      setLoading(false)
-    }
+  const accountMutation = useCreateAccount()
 
-    fetchAccountData()
-  }, [])
-
-  const createNewAccount = async (name: string) => {
-    setLoading(true)
-    const result = await createAccount({ name })
-
-    if (result.error !== null) {
-      toast.error('Something went wrong!')
-      setLoading(false)
-    } else {
-      toast.success('Account created successfully')
-      setLoading(false)
-    }
-  }
+  const createNewAccount = (name: string) =>
+    accountMutation.mutate(name, {
+      onSuccess: () => {
+        toast.success('Account created successfully')
+        // Invalidate and refetch
+        queryClient.invalidateQueries({ queryKey: ['accounts'] })
+      },
+      onError: () => toast.error('Something went wrong!'),
+    })
 
   const selectValue = useRef<string>()
-
-  const accountOptions = (accountData ?? []).map(account => ({
-    label: account.name,
-    value: account.id,
-  }))
 
   const confirm = () =>
     new Promise((resolve, reject) => {
@@ -79,13 +61,23 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
           <DialogTitle>Select Account</DialogTitle>
           <DialogDescription>Please select an account to continue</DialogDescription>
         </DialogHeader>
-        <SelectComponent
-          placeholder='Select an account'
-          options={accountOptions}
-          onCreate={createNewAccount}
-          onChange={value => (selectValue.current = value)}
-          disable={loading}
-        />
+
+        <Select
+          onValueChange={value => (selectValue.current = value)}
+          disabled={accountQuery.isLoading}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder='Select an account' />
+          </SelectTrigger>
+          <SelectContent>
+            {accountOptions.map(account => (
+              <SelectItem key={account.value} value={account.value}>
+                {account.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <DialogFooter className='pt-2'>
           <Button onClick={handleCancel} variant={'outline'}>
             Cancel
