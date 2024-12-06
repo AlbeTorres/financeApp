@@ -1,12 +1,12 @@
 'use server'
-
 import { auth } from '@/auth'
-import prisma from '@/lib/prisma'
-import Decimal from 'decimal.js'
+import { differenceInDays, parse, subDays } from 'date-fns'
 import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
+import { getTransactionStatsByPeriod, TransactionStats } from './getTransactionStatsByPeriod '
+import { calculatePercentageChange } from './utils'
 
-export const getSummary = async (startDate?: Date, endDate?: Date) => {
+export const getSummary = async (from?: string, to?: string) => {
   const session = await auth()
   const userId = session?.user.id
 
@@ -14,83 +14,35 @@ export const getSummary = async (startDate?: Date, endDate?: Date) => {
     return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
   }
 
-  try {
-    const transactions = await prisma.transaction.findMany({
-      where: {
-        userId: userId,
-        date: {
-          gte: startDate,
-          lte: endDate,
-        },
-      },
-      include: {
-        category: {
-          select: {
-            name: true,
-            id: true,
-          },
-        },
-        account: {
-          select: {
-            name: true,
-            id: true,
-          },
-        },
-      },
-    })
+  const defaulTo = new Date()
+  const defaulFrom = subDays(defaulTo, 30)
 
-    // const userTransactionStats = transactions.reduce(
-    //   (accumulator, transaction) => {
-    //     const amount = parseFloat(transaction.amount)
+  const startDate = from ? parse(from, 'yyyy-MM-dd', new Date()) : defaulFrom
+  const endDate = to ? parse(to, 'yyyy-MM-dd', new Date()) : defaulTo
 
-    //     if (amount > 0) {
-    //       accumulator.income += amount // Sumar al ingreso
-    //     } else {
-    //       accumulator.expenses += amount // Sumar al gasto
-    //     }
+  const periodLength = differenceInDays(endDate, startDate)
+  const lastPeriodStart = subDays(startDate, periodLength)
+  const lastPeriodEnd = subDays(endDate, periodLength)
 
-    //     return accumulator // Retornar acumulador para la próxima iteración
-    //   },
-    //   { income: 0, expenses: 0, remaining: 0 }
-    // )
+  const currentPeriod = await getTransactionStatsByPeriod(startDate, endDate)
+  const lastPeriod = await getTransactionStatsByPeriod(lastPeriodStart, lastPeriodEnd)
 
-    // userTransactionStats.income = parseFloat(userTransactionStats.income.toFixed(2))
-    // userTransactionStats.expenses = parseFloat(userTransactionStats.expenses.toFixed(2))
-    // userTransactionStats.remaining = parseFloat(
-    //   (userTransactionStats.income + userTransactionStats.expenses).toFixed(2)
-    // )
-
-    const userTransactionStats = transactions.reduce(
-      (accumulator, transaction) => {
-        const amount = new Decimal(transaction.amount) // Crear un Decimal con el monto
-
-        if (amount.gt(0)) {
-          accumulator.income = accumulator.income.plus(amount) // Sumar al ingreso
-        } else {
-          accumulator.expenses = accumulator.expenses.plus(amount) // Sumar al gasto (ya negativo)
-        }
-
-        return accumulator // Retornar el acumulador
-      },
-      {
-        income: new Decimal(0), // Inicializar income con Decimal
-        expenses: new Decimal(0), // Inicializar expenses con Decimal
-        remaining: new Decimal(0), // Inicializar remaining con Decimal
-      }
+  if (currentPeriod.data && lastPeriod.data) {
+    const incomeChange = calculatePercentageChange(
+      currentPeriod.data.income,
+      lastPeriod.data.income
+    )
+    const expensesChange = calculatePercentageChange(
+      currentPeriod.data.expenses,
+      lastPeriod.data.expenses
+    )
+    const remainingChange = calculatePercentageChange(
+      currentPeriod.data.remaining,
+      lastPeriod.data.remaining
     )
 
-    // Redondear a dos decimales solo al final
-    userTransactionStats.income = userTransactionStats.income.toDecimalPlaces(2)
-    userTransactionStats.expenses = userTransactionStats.expenses.toDecimalPlaces(2)
-    userTransactionStats.remaining = userTransactionStats.income
-      .plus(userTransactionStats.expenses)
-      .toDecimalPlaces(2)
-
     revalidatePath('/dashboard')
-
-    return parseResponse(true, 200, null, 'Summary successfully!', userTransactionStats)
-  } catch (error) {
-    console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+  } else {
+    return parseResponse<TransactionStats | null>(true, 500, null, 'Something went wrong', null)
   }
 }
