@@ -1,7 +1,6 @@
 'use server'
 import { auth } from '@/auth'
 import { differenceInDays, parse, subDays } from 'date-fns'
-import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 import { getTransactionStatsByPeriod, TransactionStats } from './getTransactionStatsByPeriod '
 import { calculatePercentageChange } from './utils'
@@ -32,6 +31,7 @@ export const getSummary = async (from?: string, to?: string) => {
       currentPeriod.data.income,
       lastPeriod.data.income
     )
+    console.log(currentPeriod.data.income, lastPeriod.data.income)
     const expensesChange = calculatePercentageChange(
       currentPeriod.data.expenses,
       lastPeriod.data.expenses
@@ -41,7 +41,26 @@ export const getSummary = async (from?: string, to?: string) => {
       lastPeriod.data.remaining
     )
 
-    revalidatePath('/dashboard')
+    //eliminar todo el uso de la libreria decimal y volver a la idea de las miliunits del video
+    console.log({
+      currentP: currentPeriod.data,
+      lastP: lastPeriod.data,
+      incomeChange,
+      expensesChange,
+      remainingChange,
+      days: currentPeriod.data.statsByDay,
+    })
+
+    return parseResponse(true, 200, null, 'Summary successfully!', {
+      remainingAmount: currentPeriod.data.remaining,
+      remainingChange,
+      incomeAmount: currentPeriod.data.income,
+      incomeChange,
+      expensesAmount: currentPeriod.data.expenses,
+      expensesChange,
+      categories: currentPeriod.data.categories,
+      days: currentPeriod.data.statsByDay,
+    })
   } else {
     return parseResponse<TransactionStats | null>(true, 500, null, 'Something went wrong', null)
   }
