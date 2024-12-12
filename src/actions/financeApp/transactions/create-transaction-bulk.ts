@@ -28,6 +28,7 @@ export const createTransactionsBulk = async (
   const errors: Array<{ index: number; error: string }> = []
   const validatedTransactions = transactions.map((transaction, index) => {
     const validationResult = insertTransactionSchema.safeParse(transaction)
+
     if (!validationResult.success) {
       errors.push({ index, error: 'Invalid fields in transaction' })
     }
@@ -48,7 +49,7 @@ export const createTransactionsBulk = async (
         prisma.transaction.create({
           data: {
             ...transaction,
-            amount: convertAmountToMiliunits(transaction.amount),
+            amount: convertAmountToMiliunits(Number(transaction.amount)),
             userId,
           },
           select: {

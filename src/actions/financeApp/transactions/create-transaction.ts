@@ -56,6 +56,8 @@ export const createTransaction = async (
         date: true,
       },
     })
+
+    console.log()
     revalidatePath('/transactions')
 
     return parseResponse(true, 200, null, 'Transaction created successfully!', transaction)

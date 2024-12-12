@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { insertTransactionSchema } from '@/schema'
+import { transactionFormSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
@@ -28,7 +28,7 @@ import { SelectComponent } from '@/components'
 import { useConfirm } from '../../../../hooks/use-confirm'
 import { Transaction } from '../../../../interfaces'
 
-const formSchema = insertTransactionSchema
+const formSchema = transactionFormSchema
 
 type FormValues = z.input<typeof formSchema>
 

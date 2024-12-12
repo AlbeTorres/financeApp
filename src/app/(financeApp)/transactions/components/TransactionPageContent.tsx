@@ -31,6 +31,7 @@ export const TransactionPageContent = ({ data }: Props) => {
     const response = await createTransactionsBulk(data)
 
     if (response.error !== null) {
+      console.log(response.error)
       toast.error('Something went wrong!')
     } else {
       toast.success(`${response.data.length} transactions created successfully!`)

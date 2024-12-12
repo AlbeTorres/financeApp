@@ -1,4 +1,5 @@
 import { TransactionResponse } from '@/interfaces'
+import { convertAmountFromMiliunits } from '@/lib/utils'
 import { eachDayOfInterval, isSameDay } from 'date-fns'
 
 export interface ActiveDays {
@@ -37,7 +38,21 @@ export function calculatePercentageChange(current: number, previous: number) {
   if (previous === 0) {
     return previous === current ? 0 : 100
   }
-  return ((current - previous) / previous) * 100
+
+  const percent = ((current - previous) / previous) * 100
+
+  return Math.abs(Math.round(percent))
+}
+
+const SAFE_MAX = BigInt(Number.MAX_SAFE_INTEGER)
+const SAFE_MIN = BigInt(Number.MIN_SAFE_INTEGER)
+
+function safeBigIntToNumber(value: bigint): number | null {
+  if (value > SAFE_MAX || value < SAFE_MIN) {
+    console.error('El valor bigint está fuera del rango seguro para un número.')
+    return null // Retorna null o lanza un error según tu caso de uso
+  }
+  return Number(value) // Conversión segura
 }
 
 export function getTransactionStats(transactions: TransactionResponse[]) {
@@ -63,7 +78,8 @@ export function getTransactionStats(transactions: TransactionResponse[]) {
         if (!accumulator.categories[categoryName]) {
           accumulator.categories[categoryName] = 0
         }
-        accumulator.categories[categoryName] = accumulator.categories[categoryName] + amount
+        accumulator.categories[categoryName] =
+          accumulator.categories[categoryName] + convertAmountFromMiliunits(amount)
       }
 
       // Buscar si ya existe un día registrado en statsByDay
@@ -75,15 +91,15 @@ export function getTransactionStats(transactions: TransactionResponse[]) {
         // Si no existe, agregar un nuevo registro para ese día
         accumulator.statsByDay.push({
           date: transaction.date,
-          income: amount > 0 ? amount : 0,
-          expenses: amount < 0 ? 0 : amount,
+          income: amount > 0 ? convertAmountFromMiliunits(amount) : 0,
+          expenses: amount > 0 ? 0 : convertAmountFromMiliunits(amount),
         })
       } else {
         // Si existe, actualizar income o expenses según corresponda
         if (amount > 0) {
-          existingDay.income = existingDay.income + amount
+          existingDay.income = existingDay.income + convertAmountFromMiliunits(amount)
         } else {
-          existingDay.expenses = existingDay.expenses + amount
+          existingDay.expenses = existingDay.expenses + convertAmountFromMiliunits(amount)
         }
       }
 
@@ -99,19 +115,9 @@ export function getTransactionStats(transactions: TransactionResponse[]) {
   )
 
   // TODO:Redondear a dos decimales solo al final
-
+  userTransactionStats.expenses = convertAmountFromMiliunits(userTransactionStats.expenses)
+  userTransactionStats.income = convertAmountFromMiliunits(userTransactionStats.income)
   userTransactionStats.remaining = userTransactionStats.income + userTransactionStats.expenses
 
   return userTransactionStats
-}
-
-const SAFE_MAX = BigInt(Number.MAX_SAFE_INTEGER)
-const SAFE_MIN = BigInt(Number.MIN_SAFE_INTEGER)
-
-function safeBigIntToNumber(value: bigint): number | null {
-  if (value > SAFE_MAX || value < SAFE_MIN) {
-    console.error('El valor bigint está fuera del rango seguro para un número.')
-    return null // Retorna null o lanza un error según tu caso de uso
-  }
-  return Number(value) // Conversión segura
 }
