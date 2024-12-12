@@ -13,16 +13,14 @@ type Props = {
 
 export const AmountInput = React.forwardRef<HTMLInputElement, Props>(
   ({ value, onChange, placeholder, disabled }, ref) => {
-    const parsedValue = parseFloat(value)
-    const isIncome = parsedValue > 0
-    const isExpense = parsedValue < 0
+    const parsedValue = value
+    const isIncome = Number(parsedValue) > 0
+    const isExpense = Number(parsedValue) < 0
 
     const onReverseValue = () => {
       if (!value) return
-      console.log(value)
-      const newValue = parseFloat(value.replace(',', '.')) * -1
-      console.log(newValue)
-      onChange(newValue.toFixed(2).toString())
+      const newValue = parseFloat(value.toString().replace(',', '.')) * -1
+      onChange(newValue.toFixed(2))
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,14 +32,14 @@ export const AmountInput = React.forwardRef<HTMLInputElement, Props>(
       if (regex.test(inputValue) || inputValue === '') {
         // Reemplazar coma por punto para consistencia
         const normalizedValue = inputValue.replace(',', '.')
-
+        console.log(normalizedValue)
         // Limitar a dos decimales
         const parts = normalizedValue.split('.')
         if (parts[1] && parts[1].length > 2) {
           parts[1] = parts[1].slice(0, 2)
         }
 
-        onChange(parts.join('.'))
+        onChange(normalizedValue)
       }
     }
 
@@ -68,6 +66,7 @@ export const AmountInput = React.forwardRef<HTMLInputElement, Props>(
           </Tooltip>
         </TooltipProvider>
         <Input
+          type='text'
           value={value}
           ref={ref}
           onChange={handleInputChange}

@@ -2,13 +2,14 @@
 
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
+import { convertAmountToMiliunits } from '@/lib/utils'
 import { updateTransactionSchema } from '@/schema'
 import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 
 type Props = {
   id: string
-  amount?: string
+  amount?: number
   accountId?: string
   categoryId?: string | null
   notes?: string | null
@@ -54,7 +55,7 @@ export const updateTransaction = async ({
       },
       data: {
         id,
-        amount,
+        amount: amount ? convertAmountToMiliunits(amount) : amount,
         accountId,
         categoryId,
         notes,

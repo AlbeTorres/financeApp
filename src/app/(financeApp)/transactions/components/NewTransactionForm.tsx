@@ -41,7 +41,14 @@ export const NewTransactionForm = ({ accountOptions, categoryOptions }: Props) =
   const handleSubmit = async (values: FormValues) => {
     const { amount, date, payee, categoryId, accountId, notes } = values
     setLoading(true)
-    const result = await createTransaction(amount, accountId, categoryId, notes, date, payee)
+    const result = await createTransaction(
+      Number(amount),
+      accountId,
+      categoryId,
+      notes,
+      date,
+      payee
+    )
     if (result.error !== null) {
       toast.error('Something went wrong!')
       setLoading(false)

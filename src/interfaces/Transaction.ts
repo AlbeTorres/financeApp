@@ -3,17 +3,17 @@ import { Category } from './Category'
 
 export interface Transaction {
   id: string
-  amount: string
-  payee?: string
+  amount: number
+  payee: string
   accountId: string
   accountName: string
-  categoryId?: string
-  categoryName?: string
-  notes: string
+  categoryId: string | null
+  categoryName: string | undefined
+  notes: string | null
   date: string
 }
 export interface CSVTransaction {
-  amount: string
+  amount: number
   payee: string
   notes?: string
   date: Date
@@ -21,14 +21,12 @@ export interface CSVTransaction {
 
 export interface TransactionResponse {
   id: string
-  amount: string
-  payee?: string
+  amount: bigint
+  payee: string | null
   accountId: string
-  accountName: string
-  categoryId: string
-  categoryName: string
-  notes: string
+  categoryId: string | null
+  notes: string | null
   date: Date
-  category: Category
+  category: Category | null
   account: Account
 }

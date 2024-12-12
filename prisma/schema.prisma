@@ -123,7 +123,7 @@ model Category {
 
 model Transaction {
   id         String       @id @default(uuid())
-  amount     String
+  amount     BigInt
   payee      String?
   notes      String?
   date       DateTime

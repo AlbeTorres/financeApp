@@ -1,3 +1,4 @@
+import { parseTransaction } from '@/actions/lib/parseTransaction'
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import { parseResponse } from '../../lib/parseResponse'
@@ -32,7 +33,17 @@ export const getTransactionsByUser = async (id: string) => {
       },
     })
 
-    return parseResponse(true, 200, null, 'Transaction retrieved successfully!', transaction)
+    if (transaction !== null) {
+      return parseResponse(
+        true,
+        200,
+        null,
+        'Transaction retrieved successfully!',
+        parseTransaction(transaction)
+      )
+    }
+
+    return parseResponse(false, 404, '', 'Transaction not found')
   } catch (error) {
     console.log(error)
     return parseResponse(false, 500, '', 'Something went wrong')

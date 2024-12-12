@@ -2,13 +2,14 @@
 
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
+import { convertAmountToMiliunits } from '@/lib/utils'
 import { insertTransactionSchema } from '@/schema'
 import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 
 export const createTransactionsBulk = async (
   transactions: Array<{
-    amount: string
+    amount: number
     accountId: string
     categoryId?: string | null
     notes?: string | null
@@ -47,6 +48,7 @@ export const createTransactionsBulk = async (
         prisma.transaction.create({
           data: {
             ...transaction,
+            amount: convertAmountToMiliunits(transaction.amount),
             userId,
           },
           select: {
@@ -64,7 +66,7 @@ export const createTransactionsBulk = async (
 
     revalidatePath('/transactions')
 
-    return parseResponse(
+    return parseResponse<any>(
       true,
       200,
       null,

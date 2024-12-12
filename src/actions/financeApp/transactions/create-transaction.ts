@@ -2,12 +2,13 @@
 
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
+import { convertAmountToMiliunits } from '@/lib/utils'
 import { insertTransactionSchema } from '@/schema'
 import { revalidatePath } from 'next/cache'
 import { parseResponse } from '../../lib/parseResponse'
 
 export const createTransaction = async (
-  amount: string,
+  amount: number,
   accountId: string,
   categoryId: string | undefined | null,
   notes: string | undefined | null,
@@ -38,7 +39,7 @@ export const createTransaction = async (
     const transaction = await prisma.transaction.create({
       data: {
         userId,
-        amount,
+        amount: convertAmountToMiliunits(amount),
         accountId,
         categoryId,
         notes,

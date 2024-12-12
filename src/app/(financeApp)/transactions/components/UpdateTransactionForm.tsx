@@ -57,7 +57,11 @@ export const UpdateTransactionForm = ({
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { ...defaultValues, date: new Date(defaultValues!.date) },
+    defaultValues: {
+      ...defaultValues,
+      amount: defaultValues?.amount.toString(),
+      date: new Date(defaultValues!.date),
+    },
   })
 
   const handleSubmit = async (values: FormValues) => {
@@ -65,7 +69,7 @@ export const UpdateTransactionForm = ({
     setLoading(true)
     const result = await updateTransaction({
       id,
-      amount,
+      amount: Number(amount),
       accountId,
       categoryId,
       notes,

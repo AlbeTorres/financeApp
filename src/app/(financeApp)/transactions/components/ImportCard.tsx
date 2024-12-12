@@ -101,6 +101,7 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
     const formattedData: CSVTransaction[] = arrayOfData.map(item => ({
       ...item,
       date: new Date(item.date),
+      amount: Number(item.amount),
     }))
 
     onSubmit(formattedData)
