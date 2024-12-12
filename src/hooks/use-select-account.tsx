@@ -7,14 +7,11 @@ import {
   DialogHeader,
 } from '@/components/ui/dialog'
 import { Dialog, DialogTitle } from '@radix-ui/react-dialog'
-import { useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useAccounts, useCreateAccount } from './api/account.hook'
+import { useAccounts } from './api/account.hook'
 
 export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] => {
   const accountQuery = useAccounts()
-  const queryClient = useQueryClient()
   const accountOptions = (accountQuery.data?.data ?? []).map(account => ({
     label: account.name,
     value: account.id,
@@ -23,17 +20,18 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
     null
   )
 
-  const accountMutation = useCreateAccount()
+  // const queryClient = useQueryClient()
+  // const accountMutation = useCreateAccount()
 
-  const createNewAccount = (name: string) =>
-    accountMutation.mutate(name, {
-      onSuccess: () => {
-        toast.success('Account created successfully')
-        // Invalidate and refetch
-        queryClient.invalidateQueries({ queryKey: ['accounts'] })
-      },
-      onError: () => toast.error('Something went wrong!'),
-    })
+  // const createNewAccount = (name: string) =>
+  //   accountMutation.mutate(name, {
+  //     onSuccess: () => {
+  //       toast.success('Account created successfully')
+  //       // Invalidate and refetch
+  //       queryClient.invalidateQueries({ queryKey: ['accounts'] })
+  //     },
+  //     onError: () => toast.error('Something went wrong!'),
+  //   })
 
   const selectValue = useRef<string>()
 

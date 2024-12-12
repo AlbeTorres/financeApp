@@ -1,14 +1,13 @@
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
-import Decimal from 'decimal.js'
 import { parseResponse } from '../../lib/parseResponse'
-import { ActiveDays, fillMissingDays, getTransactionStats } from './utils'
+import { ActiveDays, ExpenseByCategory, fillMissingDays, getTransactionStats } from './utils'
 
 export interface TransactionStats {
-  income: Decimal
-  expenses: Decimal
-  remaining: Decimal
-  categories: any
+  income: number
+  expenses: number
+  remaining: number
+  categories: ExpenseByCategory
   statsByDay: ActiveDays[]
 }
 

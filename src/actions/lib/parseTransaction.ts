@@ -1,7 +1,7 @@
-import { TransactionResponse } from '@/interfaces'
+import { Transaction, TransactionResponse } from '@/interfaces'
 import { convertAmountFromMiliunits } from '@/lib/utils'
 
-export function parseTransactions(transactionsToParse: TransactionResponse[]) {
+export function parseTransactions(transactionsToParse: TransactionResponse[]): Transaction[] {
   const transactions = transactionsToParse.map(transaction => ({
     id: transaction.id,
     amount: convertAmountFromMiliunits(Number(transaction.amount)),
