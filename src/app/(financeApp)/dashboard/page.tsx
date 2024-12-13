@@ -1,12 +1,12 @@
 import { getSummary } from '@/actions/financeApp/dashboard/summary'
+import { DataGrid } from './components/DataGrid'
 
 export default async function DashBoardPage() {
   const summary = await getSummary()
 
   return (
-    <div>
-      <h1>{'dashboard'}</h1>
-      <h1>{JSON.stringify(summary)}</h1>
+    <div className='max-w-screen-2xl mx-auto w-full pb-10 -mt-24'>
+      <DataGrid />
     </div>
   )
 }

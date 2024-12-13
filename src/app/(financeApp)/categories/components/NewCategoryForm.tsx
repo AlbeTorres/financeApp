@@ -46,7 +46,7 @@ export const NewCategoryForm = ({ transactionId }: Props) => {
       if (transactionId) {
         const resultTransaction = await updateTransaction({
           id: transactionId,
-          categoryId: result.data.id,
+          categoryId: result.data?.id,
         })
 
         if (resultTransaction.error !== null) {

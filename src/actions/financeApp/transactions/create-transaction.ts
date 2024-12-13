@@ -1,6 +1,7 @@
 'use server'
 
 import { auth } from '@/auth'
+import { CreateOrUpdateTransactionResponse } from '@/interfaces'
 import prisma from '@/lib/prisma'
 import { convertAmountToMiliunits } from '@/lib/utils'
 import { insertTransactionSchema } from '@/schema'
@@ -19,7 +20,12 @@ export const createTransaction = async (
   const userId = session?.user.id
 
   if (!userId) {
-    return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
+    return parseResponse<CreateOrUpdateTransactionResponse>(
+      false,
+      401,
+      'unauthorized_user',
+      'Unauthorized User'
+    )
   }
 
   const validatedFields = insertTransactionSchema.safeParse({
@@ -32,7 +38,12 @@ export const createTransaction = async (
   })
 
   if (!validatedFields.success) {
-    return parseResponse(false, 400, 'invalid_fields', 'Invalid fields!')
+    return parseResponse<CreateOrUpdateTransactionResponse>(
+      false,
+      400,
+      'invalid_fields',
+      'Invalid fields!'
+    )
   }
 
   try {
@@ -60,9 +71,15 @@ export const createTransaction = async (
     console.log()
     revalidatePath('/transactions')
 
-    return parseResponse(true, 200, null, 'Transaction created successfully!', transaction)
+    return parseResponse<CreateOrUpdateTransactionResponse>(
+      true,
+      200,
+      null,
+      'Transaction created successfully!',
+      transaction
+    )
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+    return parseResponse<CreateOrUpdateTransactionResponse>(false, 500, '', 'Something went wrong')
   }
 }

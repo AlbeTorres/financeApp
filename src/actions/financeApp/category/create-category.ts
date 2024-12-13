@@ -1,6 +1,7 @@
 'use server'
 
 import { auth } from '@/auth'
+import { Category } from '@/interfaces'
 import prisma from '@/lib/prisma'
 import { insertCategorySchema } from '@/schema'
 import { revalidatePath } from 'next/cache'
@@ -12,13 +13,13 @@ export const createCategory = async ({ name }: z.infer<typeof insertCategorySche
   const userId = session?.user.id
 
   if (!userId) {
-    return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
+    return parseResponse<Category>(false, 401, 'unauthorized_user', 'Unauthorized User')
   }
 
   const validatedFields = insertCategorySchema.safeParse({ name })
 
   if (!validatedFields.success) {
-    return parseResponse(false, 400, 'invalid_fields', 'Invalid fields!')
+    return parseResponse<Category>(false, 400, 'invalid_fields', 'Invalid fields!')
   }
 
   try {
@@ -34,9 +35,9 @@ export const createCategory = async ({ name }: z.infer<typeof insertCategorySche
     })
     revalidatePath('/categories')
 
-    return parseResponse(true, 200, null, 'Category created successfully!', category)
+    return parseResponse<Category>(true, 200, null, 'Category created successfully!', category)
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+    return parseResponse<Category>(false, 500, '', 'Something went wrong')
   }
 }

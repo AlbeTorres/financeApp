@@ -30,3 +30,13 @@ export interface TransactionResponse {
   category: Category | null
   account: Account
 }
+
+export interface CreateOrUpdateTransactionResponse {
+  id: string
+  amount: bigint
+  accountId: string
+  categoryId: string | null
+  notes: string | null
+  date: Date
+  userId: string
+}

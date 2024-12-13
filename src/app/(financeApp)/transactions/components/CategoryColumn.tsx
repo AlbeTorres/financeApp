@@ -2,7 +2,7 @@ import { TriangleAlertIcon } from 'lucide-react'
 import { useCategoryState } from '../../../../store'
 
 type Props = {
-  categoryId?: string
+  categoryId?: string | null
   categoryName?: string
   transactionId?: string
 }
