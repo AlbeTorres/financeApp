@@ -5,7 +5,7 @@ import { parseResponse } from '../../lib/parseResponse'
 import { getTransactionStatsByPeriod } from './getTransactionStatsByPeriod '
 import { ActiveDays, calculatePercentageChange, ExpenseByCategory } from './utils'
 
-interface SummaryResponse {
+export interface SummaryResponse {
   remainingAmount: number
   remainingChange: number
   incomeAmount: number

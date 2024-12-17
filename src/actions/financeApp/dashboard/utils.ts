@@ -34,16 +34,16 @@ export function fillMissingDays(activeDays: ActiveDays[], startDate: Date, endDa
   return transactionsByDay
 }
 
-export function calculatePercentageChange(current: number, previous: number) {
+export function calculatePercentageChange(current: number, previous: number): number {
   if (previous === 0) {
-    return previous === current ? 0 : 100
+    if (current === 0) {
+      return 0 // No change
+    }
+    return 100 // 100% change when previous is 0 and current is non-zero
   }
 
-  const percent = ((current - previous) / previous) * 100
-
-  return Math.abs(Math.round(percent))
+  return ((current - previous) / previous) * 100
 }
-
 const SAFE_MAX = BigInt(Number.MAX_SAFE_INTEGER)
 const SAFE_MIN = BigInt(Number.MIN_SAFE_INTEGER)
 
