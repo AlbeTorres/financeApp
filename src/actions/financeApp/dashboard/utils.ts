@@ -92,14 +92,14 @@ export function getTransactionStats(transactions: TransactionResponse[]) {
         accumulator.statsByDay.push({
           date: transaction.date,
           income: amount > 0 ? convertAmountFromMiliunits(amount) : 0,
-          expenses: amount > 0 ? 0 : convertAmountFromMiliunits(amount),
+          expenses: amount > 0 ? 0 : Math.abs(convertAmountFromMiliunits(amount)),
         })
       } else {
         // Si existe, actualizar income o expenses según corresponda
         if (amount > 0) {
           existingDay.income = existingDay.income + convertAmountFromMiliunits(amount)
         } else {
-          existingDay.expenses = existingDay.expenses + convertAmountFromMiliunits(amount)
+          existingDay.expenses = existingDay.expenses + Math.abs(convertAmountFromMiliunits(amount))
         }
       }
 
