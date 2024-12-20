@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
-import { CustomTooltip } from './CustomTooltip'
+import { CustomTooltip } from '../CustomTooltip'
 
 type Props = {
   data: {
