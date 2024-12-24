@@ -37,6 +37,7 @@
     "next-auth": "^5.0.0-beta.20",
     "next-intl": "^3.17.6",
     "nodemailer": "^6.9.14",
+    "query-string": "^9.1.1",
     "react": "^18",
     "react-countup": "^6.5.3",
     "react-currency-input-field": "^3.8.0",
