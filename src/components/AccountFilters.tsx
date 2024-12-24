@@ -29,7 +29,7 @@ export const AccountFilters = () => {
 
   return (
     <Select value={accountId} onValueChange={onChange} disabled={isLoadingAccounts}>
-      <SelectTrigger className='lg:w-auto w-full h-9 rounded-md px-3 font-normal bg-white/10 hover:bg-white/20 focus:bg-white/30 hover:text-white border-none focus:text-white focus:ring-offset-0 focus:ring-transparent outline-none text-white transition'>
+      <SelectTrigger className='lg:w-auto flex items-center justify-center w-full h-9 rounded-md px-3 font-normal bg-white/10 hover:bg-white/20 focus:bg-white/30 hover:text-white border-none focus:text-white focus:ring-offset-0 focus:ring-transparent outline-none text-white transition'>
         <SelectValue placeholder='Account' />
       </SelectTrigger>
       <SelectContent>
