@@ -3,8 +3,13 @@ import { auth } from '@/auth'
 import { differenceInDays, parse, subDays } from 'date-fns'
 import { parseResponse } from '../../lib/parseResponse'
 import { getTransactionStatsByPeriod } from './getTransactionStatsByPeriod '
-import { ActiveDays, calculatePercentageChange, ExpenseByCategory } from './utils'
+import { ActiveDays, calculatePercentageChange } from './utils'
 
+export interface CategoriesExpenses {
+  name: string
+  value: number
+  percent: number
+}
 export interface SummaryResponse {
   remainingAmount: number
   remainingChange: number
@@ -12,7 +17,7 @@ export interface SummaryResponse {
   incomeChange: number
   expensesAmount: number
   expensesChange: number
-  categories: ExpenseByCategory
+  categories: CategoriesExpenses[]
   days: ActiveDays[]
 }
 
@@ -57,6 +62,12 @@ export const getSummary = async (from?: string, to?: string) => {
       lastPeriod.data.remaining
     )
 
+    const categoriesExpenses = Object.entries(currentPeriod.data.categories).map(entry => {
+      const percent = Math.abs((entry[1] * 100) / currentPeriod!.data!.expenses)
+
+      return { name: entry[0], value: Math.abs(entry[1]), percent }
+    })
+
     return parseResponse<SummaryResponse>(true, 200, null, 'Summary successfully!', {
       remainingAmount: Math.round(currentPeriod.data.remaining * 100) / 100,
       remainingChange,
@@ -64,7 +75,7 @@ export const getSummary = async (from?: string, to?: string) => {
       incomeChange,
       expensesAmount: currentPeriod.data.expenses,
       expensesChange,
-      categories: currentPeriod.data.categories,
+      categories: categoriesExpenses,
       days: currentPeriod.data.statsByDay,
     })
   } else {
