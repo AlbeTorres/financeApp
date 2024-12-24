@@ -1,5 +1,5 @@
 'use client'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useMedia } from 'react-use'
 import { NavigationButton } from './NavigationButton'
@@ -22,13 +22,13 @@ const routes = [
     icon: '',
   },
   {
-    href: '/settings',
-    label: 'settings',
+    href: '/categories',
+    label: 'categories',
     icon: '',
   },
   {
-    href: '/categories',
-    label: 'categories',
+    href: '/settings',
+    label: 'settings',
     icon: '',
   },
 ]
@@ -36,7 +36,6 @@ const routes = [
 export const Navigation = () => {
   const [isOpen, setOpen] = useState(false)
   const path = usePathname()
-  const router = useRouter()
   const isMobile = useMedia('(max-width: 1024px)', false)
 
   if (isMobile) return <SideBar path={path} routes={routes} isOpen={isOpen} onChange={setOpen} />
