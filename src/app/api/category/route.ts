@@ -1,7 +1,7 @@
-import { createAccount } from '@/actions/financeApp/account/create-account'
-import { deleteAccounts } from '@/actions/financeApp/account/delete-account'
-import { getAccountsByUser } from '@/actions/financeApp/account/get-accounts-by-user'
-import { updateAccount } from '@/actions/financeApp/account/update-account'
+import { createCategory } from '@/actions/financeApp/category/create-category'
+import { deleteCategories } from '@/actions/financeApp/category/delete-categories'
+import { getCategoriesByUser } from '@/actions/financeApp/category/get-categories-by-user'
+import { updateCategory } from '@/actions/financeApp/category/update-category'
 import { NextResponse } from 'next/server'
 
 export async function GET(req: Request) {
@@ -18,8 +18,8 @@ export async function GET(req: Request) {
   }
 
   try {
-    const accounts = await getAccountsByUser(limit, offset)
-    return NextResponse.json(accounts, { status: 200 })
+    const categories = await getCategoriesByUser(limit, offset)
+    return NextResponse.json(categories, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch accounts' }, { status: 500 })
   }
@@ -28,21 +28,19 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     // Parsea el cuerpo de la solicitud
-    const body = await req.json()
+    const body = (await req.json()) as { name: string }
 
     // Valida los datos de entrada
-    const { name, type, balance } = body
+    const { name } = body
 
     // Validaciones básicas
     if (!name) {
       return NextResponse.json({ error: 'Account name is required' }, { status: 400 })
     }
 
-    // Llama a tu función de crear cuenta
-    const result = await createAccount({
+    // Llama a tu función de crear categoria
+    const result = await createCategory({
       name,
-      // type, // Opcional, dependiendo de tu implementación
-      // balance, // Opcional, dependiendo de tu implementación
     })
 
     // Maneja el resultado
@@ -50,7 +48,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
 
-    // Devuelve la cuenta creada
+    // Devuelve la categoria creada
     return NextResponse.json(result.data, { status: 201 })
   } catch (error) {
     console.error('Error creating account:', error)
@@ -73,20 +71,20 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'An array of IDs is required' }, { status: 400 })
     }
 
-    // Llama a tu acción de eliminar accounts
-    const result = await deleteAccounts(body.ids)
+    // Llama a tu acción de eliminar categoría
+    const result = await deleteCategories(body.ids)
 
     // Maneja el resultado
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
 
-    return NextResponse.json({ message: 'Accounts deleted successfully' }, { status: 200 })
+    return NextResponse.json({ message: 'Category deleted successfully' }, { status: 200 })
   } catch (error) {
-    console.error('Error deleting Accounts:', error)
+    console.error('Error deleting category:', error)
     return NextResponse.json(
       {
-        error: 'Failed to delete Accounts',
+        error: 'Failed to delete category',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
@@ -96,25 +94,20 @@ export async function DELETE(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    const body = (await req.json()) as {
-      id: string
-      name: string
-      type?: string
-      balance?: number
-    }
+    const body = (await req.json()) as { id: string; name?: string }
 
-    const { id, name, type, balance } = body
+    const { id, name } = body
 
     // Validaciones básicas
     if (!id) {
-      return NextResponse.json({ error: 'Account ID is required' }, { status: 400 })
+      return NextResponse.json({ error: 'Category ID is required' }, { status: 400 })
     }
     if (!name) {
-      return NextResponse.json({ error: 'Account name is required' }, { status: 400 })
+      return NextResponse.json({ error: 'Category name is required' }, { status: 400 })
     }
 
     // Llama a tu acción de actualizar categoría
-    const result = await updateAccount({ id, name, type, balance })
+    const result = await updateCategory({ id, name })
 
     // Maneja el resultado
     if (result.error) {

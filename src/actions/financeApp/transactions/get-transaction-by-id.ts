@@ -1,15 +1,16 @@
 import { parseTransaction } from '@/actions/lib/parseTransaction'
 import { auth } from '@/auth'
+import { Transaction } from '@/interfaces'
 import prisma from '@/lib/prisma'
 import { parseResponse } from '../../lib/parseResponse'
 
-export const getTransactionsByUser = async (id: string) => {
+export const getTransactionsById = async (id: string) => {
   try {
     const session = await auth()
     const userId = session?.user.id
 
     if (!userId) {
-      return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
+      return parseResponse<Transaction>(false, 401, 'unauthorized_user', 'Unauthorized User')
     }
 
     const transaction = await prisma.transaction.findFirst({
@@ -34,7 +35,7 @@ export const getTransactionsByUser = async (id: string) => {
     })
 
     if (transaction !== null) {
-      return parseResponse(
+      return parseResponse<Transaction>(
         true,
         200,
         null,
@@ -43,9 +44,9 @@ export const getTransactionsByUser = async (id: string) => {
       )
     }
 
-    return parseResponse(false, 404, '', 'Transaction not found')
+    return parseResponse<Transaction>(false, 404, '', 'Transaction not found')
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+    return parseResponse<Transaction>(false, 500, '', 'Something went wrong')
   }
 }

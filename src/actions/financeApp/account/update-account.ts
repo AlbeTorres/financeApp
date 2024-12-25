@@ -7,7 +7,12 @@ import { revalidatePath } from 'next/cache'
 import * as z from 'zod'
 import { parseResponse } from '../../lib/parseResponse'
 
-export const updateAccount = async ({ id, name }: z.infer<typeof updateAccountSchema>) => {
+export const updateAccount = async ({
+  id,
+  name,
+  type,
+  balance,
+}: z.infer<typeof updateAccountSchema>) => {
   const session = await auth()
   const userId = session?.user.id
 

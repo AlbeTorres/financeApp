@@ -2,7 +2,7 @@
 import { getCategoryById } from '@/actions/financeApp/category/get-category-by-id'
 import { NextResponse } from 'next/server'
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET({ params }: { params: { id: string } }) {
   const { id } = params
 
   try {

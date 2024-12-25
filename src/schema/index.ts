@@ -24,6 +24,8 @@ export const insertAccountSchema = z.object({
 export const updateAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   id: z.string().uuid(),
+  type: z.string().optional(),
+  balance: z.number().optional(),
 })
 export const insertCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
