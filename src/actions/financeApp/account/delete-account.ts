@@ -14,7 +14,7 @@ export const deleteAccounts = async (deleteList: string[]) => {
   }
 
   try {
-    const bank_account = await prisma.bank_Account.deleteMany({
+    await prisma.bank_Account.deleteMany({
       where: {
         id: {
           in: deleteList, // Filtra los IDs presentes en deleteList
@@ -25,7 +25,7 @@ export const deleteAccounts = async (deleteList: string[]) => {
 
     revalidatePath('/accounts')
 
-    return parseResponse(true, 200, null, 'Accounts deleted succesfully!', bank_account)
+    return parseResponse(true, 200, null, 'Accounts deleted succesfully!')
   } catch (error) {
     console.log(error)
     return parseResponse(false, 500, '', 'Something went wrong')

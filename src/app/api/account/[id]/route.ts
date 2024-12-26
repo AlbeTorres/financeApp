@@ -7,7 +7,7 @@ export async function GET({ params }: { params: { id: string } }) {
 
   try {
     const account = await getAccountById(id)
-    return NextResponse.json({ ...account }, { status: 200 })
+    return NextResponse.json(account.data, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: 'Account not found' }, { status: 404 })
   }

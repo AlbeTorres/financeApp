@@ -1,5 +1,6 @@
 'use server'
 
+import { Account } from '@/actions/lib/interfaces'
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import { updateAccountSchema } from '@/schema'
@@ -17,13 +18,13 @@ export const updateAccount = async ({
   const userId = session?.user.id
 
   if (!userId) {
-    return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
+    return parseResponse<Account>(false, 401, 'unauthorized_user', 'Unauthorized User')
   }
 
   const validatedFields = updateAccountSchema.safeParse({ name, id })
 
   if (!validatedFields.success) {
-    return parseResponse(false, 400, 'invalid_fields', 'Invalid fields!')
+    return parseResponse<Account>(false, 400, 'invalid_fields', 'Invalid fields!')
   }
 
   try {
@@ -38,13 +39,15 @@ export const updateAccount = async ({
       select: {
         id: true,
         name: true,
+        plaidId: true,
+        userId: true,
       },
     })
 
     revalidatePath('/accounts')
-    return parseResponse(true, 200, null, 'Account updated succesfully!', bank_account)
+    return parseResponse<Account>(true, 200, null, 'Account updated succesfully!', bank_account)
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+    return parseResponse<Account>(false, 500, '', 'Something went wrong')
   }
 }

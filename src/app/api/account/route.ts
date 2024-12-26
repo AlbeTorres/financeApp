@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
   try {
     const accounts = await getAccountsByUser(limit, offset)
-    return NextResponse.json(accounts, { status: 200 })
+    return NextResponse.json(accounts.data, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch accounts' }, { status: 500 })
   }
@@ -78,7 +78,7 @@ export async function DELETE(req: Request) {
 
     // Maneja el resultado
     if (result.error) {
-      return NextResponse.json({ error: result.error }, { status: 400 })
+      return NextResponse.json({ error: result.message }, { status: 400 })
     }
 
     return NextResponse.json({ message: 'Accounts deleted successfully' }, { status: 200 })

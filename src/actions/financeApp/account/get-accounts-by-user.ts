@@ -1,3 +1,4 @@
+import { Account } from '@/actions/lib/interfaces'
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import { parseResponse } from '../../lib/parseResponse'
@@ -8,7 +9,7 @@ export const getAccountsByUser = async (limit?: number, offset?: number) => {
     const userId = session?.user.id
 
     if (!userId) {
-      return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
+      return parseResponse<Account[]>(false, 401, 'unauthorized_user', 'Unauthorized User')
     }
 
     const accounts = await prisma.bank_Account.findMany({
@@ -17,9 +18,15 @@ export const getAccountsByUser = async (limit?: number, offset?: number) => {
       take: limit,
     })
 
-    return parseResponse(true, 200, null, 'Accounts retrieved successfully!', accounts)
+    return parseResponse<Account[] | null>(
+      true,
+      200,
+      null,
+      'Accounts retrieved successfully!',
+      accounts
+    )
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+    return parseResponse<Account[]>(false, 500, '', 'Something went wrong')
   }
 }

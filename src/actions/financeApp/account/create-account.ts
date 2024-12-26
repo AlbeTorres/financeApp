@@ -1,5 +1,6 @@
 'use server'
 
+import { Account } from '@/actions/lib/interfaces'
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import { insertAccountSchema } from '@/schema'
@@ -12,13 +13,13 @@ export const createAccount = async ({ name }: z.infer<typeof insertAccountSchema
   const userId = session?.user.id
 
   if (!userId) {
-    return parseResponse(false, 401, 'unauthorized_user', 'Unauthorized User')
+    return parseResponse<Account>(false, 401, 'unauthorized_user', 'Unauthorized User')
   }
 
   const validatedFields = insertAccountSchema.safeParse({ name })
 
   if (!validatedFields.success) {
-    return parseResponse(false, 400, 'invalid_fields', 'Invalid fields!')
+    return parseResponse<Account>(false, 400, 'invalid_fields', 'Invalid fields!')
   }
 
   try {
@@ -30,13 +31,21 @@ export const createAccount = async ({ name }: z.infer<typeof insertAccountSchema
       select: {
         id: true,
         name: true,
+        plaidId: true,
+        userId: true,
       },
     })
     revalidatePath('/accounts')
 
-    return parseResponse(true, 200, null, 'Account created successfully!', bank_account)
+    return parseResponse<Account | null>(
+      true,
+      200,
+      null,
+      'Account created successfully!',
+      bank_account
+    )
   } catch (error) {
     console.log(error)
-    return parseResponse(false, 500, '', 'Something went wrong')
+    return parseResponse<Account>(false, 500, '', 'Something went wrong')
   }
 }
